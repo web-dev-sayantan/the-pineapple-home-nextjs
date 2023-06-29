@@ -16,7 +16,12 @@
   }
 }
 
+html {
+  @apply w-full h-full;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-start-rgb));
+  @apply w-full h-full;
 }
