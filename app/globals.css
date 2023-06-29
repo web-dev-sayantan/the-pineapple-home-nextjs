@@ -22,6 +22,6 @@ html {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-start-rgb));
+  background: hsl(250, 24%, 9%);
   @apply w-full h-full;
 }

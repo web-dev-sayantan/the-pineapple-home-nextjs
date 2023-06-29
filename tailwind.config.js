@@ -15,20 +15,20 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       keyframes: {
-        toYellow: {
+        toPink: {
           "0%": { color: colors.transparent },
           "25%": { color: colors.transparent },
-          "100%": { color: colors.yellow[400] },
+          "100%": { color: colors.fuchsia[400] },
         },
-        toTeal: {
+        toViolet: {
           "0%": { color: colors.transparent },
           "50%": { color: colors.transparent },
-          "100%": { color: colors.teal[600] },
+          "100%": { color: colors.violet[600] },
         },
       },
       animation: {
-        toYellow: "toYellow 3s ease-in",
-        toTeal: "toTeal 4s ease-in",
+        toPink: "toPink 3s ease-in",
+        toViolet: "toViolet 4s ease-in",
       },
     },
   },
