@@ -25,10 +25,19 @@ module.exports = {
           "50%": { color: colors.transparent },
           "100%": { color: colors.violet[600] },
         },
+        skeletonLoading: {
+          "0%": {
+            backgroundColor: 'hsl(200, "20%", "80%")',
+          },
+          "100%": {
+            backgroundColor: 'hsl(200, "20%", "95%")',
+          },
+        },
       },
       animation: {
         toPink: "toPink 3s ease-in",
         toViolet: "toViolet 4s ease-in",
+        skeletonLoading: "skeletonLoading 1s linear infinite alternate",
       },
     },
   },
