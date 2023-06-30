@@ -1,22 +1,43 @@
 import Link from "next/link";
+import { LocationType } from "../interfaces";
+import { Fragment } from "react";
+import Image from "next/image";
 
-export default async function LocationCard({ location }: { location: any }) {
-  console.log(location);
+export default async function LocationCard({
+  location,
+}: {
+  location: LocationType;
+}) {
   return (
-    <Link
-      href={`/places/${location?.name}`}
-      prefetch={true}
-      className={`flex items-center justify-center w-full h-32 p-4 rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-400 sm:w-60 text-fuchsia-50 ${
-        location?.Homestay.length
-          ? "cursor-pointer"
-          : "opacity-20 cursor-not-allowed"
-      }`}
-    >
-      <span
-        className={`text-xl font-bold tracking-widest first-letter:text-3xl first-letter:text-yellow-300`}
+    <Fragment>
+      <Link
+        href={{
+          pathname: `/places/${location?.name}`,
+        }}
+        prefetch={true}
+        className={`flex relative flex-col items-center justify-center w-full h-48 bg-blend-darken rounded-lg sm:w-60 text-slate-200 bg-violet-200`}
       >
-        {location?.name}
-      </span>
-    </Link>
+        <Image
+          src={location.coverUrl}
+          alt="{location.name}"
+          fill={true}
+          priority={true}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="rounded-lg filter brightness-50"
+        ></Image>
+        <span
+          className={`absolute text-3xl font-bold tracking-widest first-letter:text-4xl first-letter:text-fuchsia-200`}
+        >
+          {location?.name.toUpperCase()}
+        </span>
+        {location.Homestay.length ? (
+          ""
+        ) : (
+          <span className="absolute text-sm bottom-14 text-slate-400">
+            Coming Soon
+          </span>
+        )}
+      </Link>
+    </Fragment>
   );
 }
