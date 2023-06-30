@@ -1,5 +1,7 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function HomestayCard({
   homestay,
@@ -13,6 +15,7 @@ export default function HomestayCard({
     }[];
   };
 }) {
+  const pathname = usePathname();
   const coverImage = homestay.HomestayGallery.find(
     (image) => image.category === "cover"
   );
@@ -20,7 +23,7 @@ export default function HomestayCard({
     <div className="w-full h-48 text-center" key={homestay.id}>
       <Link
         href={{
-          pathname: `/places/${homestay?.name}`,
+          pathname: `${pathname}/${homestay.id}`,
         }}
         prefetch={true}
         className={`flex relative flex-col items-center justify-center w-full h-48 bg-blend-darken rounded-lg sm:w-60 text-slate-200 bg-violet-600`}
