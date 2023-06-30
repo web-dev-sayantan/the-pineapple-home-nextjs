@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "prisma": "prisma",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
     "db-push": "prisma db push",
     "postinstall": "prisma generate"
@@ -19,6 +20,7 @@
     "@trpc/react-query": "^10.32.0",
     "@trpc/server": "^10.32.0",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.37.3",
     "eslint-config-next": "13.4.7",
     "next": "13.4.7",
     "react": "18.2.0",

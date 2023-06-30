@@ -1,11 +1,11 @@
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-  relationMode = "prisma"
-}
-
 generator client {
   provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -26,8 +26,29 @@ model User {
 
 model Password {
   hash   String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Admin {
+  id  String @id @default(cuid())
+  email String @unique
+  mobile String @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  firstname   String
+  lastname    String
+  sex         String?
+  dob         DateTime
+  nationality String?
+  address     String?
+  password    AdminPassword?
+}
+
+model AdminPassword {
+  hash   String
+  adminId String @unique
+  user   Admin   @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Guest {
@@ -47,6 +68,7 @@ model Location {
   state       String
   altitude    Int
   description String
+  coverUrl    String
   Homestay    Homestay[]
 }
 
@@ -54,12 +76,14 @@ model Homestay {
   id                String              @id @default(cuid())
   name              String
   address           String
-  location          Location            @relation(fields: [locationName], references: [name], onDelete: Cascade, onUpdate: Cascade)
   locationName      String
+  location          Location            @relation(fields: [locationName], references: [name], onDelete: Cascade, onUpdate: Cascade)
   Rooms             Room[]
   Reservation       Reservation[]
   HomestayAmenities HomestayAmenities[]
   HomestayGallery   HomestayGallery[]
+  
+  @@index([locationName])
 }
 
 model Room {
@@ -71,12 +95,14 @@ model Room {
   airConditioned  Boolean
   kitchenAttached Boolean
   isDorm          Boolean
-  homestay        Homestay       @relation(fields: [homestayId], references: [id])
   homestayId      String
+  homestay        Homestay       @relation(fields: [homestayId], references: [id])
   Rate            Rate[]
   RoomReserved    RoomReserved[]
   RoomFeatures    RoomFeatures[]
   RoomGallery     RoomGallery[]
+
+  @@index([homestayId])
 }
 
 model Rate {
@@ -84,8 +110,10 @@ model Rate {
   headCount  Int
   tariff     Int
   refundable Boolean
-  room       Room    @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roomId     String
+  room       Room    @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  
+  @@index([roomId])
 }
 
 model FoodPlan {
@@ -106,10 +134,13 @@ model Reservation {
   dateOut     DateTime
   totalAmount Decimal
   dueAmount   Decimal
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId      String
-  homestay    Homestay @relation(fields: [homestayId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   homestayId  String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  homestay    Homestay @relation(fields: [homestayId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([userId])
+  @@index([homestayId])
 }
 
 model RoomReserved {
@@ -117,12 +148,16 @@ model RoomReserved {
   pax          Int
   amount       Decimal
   status       String
-  primaryGuest Guest    @relation(fields: [guestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   guestId      String
-  room         Room     @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roomId       String
-  foodPlan     FoodPlan @relation(fields: [foodPlanId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   foodPlanId   String
+  primaryGuest Guest    @relation(fields: [guestId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  room         Room     @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  foodPlan     FoodPlan @relation(fields: [foodPlanId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  
+  @@index([guestId])
+  @@index([roomId])
+  @@index([foodPlanId])
 }
 
 model Amenity {
@@ -140,19 +175,25 @@ model Feature {
 }
 
 model HomestayAmenities {
-  homestay   Homestay @relation(fields: [homestayId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   homestayId String
-  amenity    Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   amenityId  String
+  homestay   Homestay @relation(fields: [homestayId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  amenity    Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([homestayId])
+  @@index([amenityId])
 
   @@unique([homestayId, amenityId])
 }
 
 model RoomFeatures {
-  room      Room    @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roomId    String
-  feature   Feature @relation(fields: [featureId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   featureId String
+  room      Room    @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  feature   Feature @relation(fields: [featureId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([roomId])
+  @@index([featureId])
 
   @@unique([roomId, featureId])
 }
@@ -161,14 +202,18 @@ model HomestayGallery {
   url         String   @id
   category    String
   description String?
-  homestay    Homestay @relation(fields: [homestayId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   homestayId  String
+  homestay    Homestay @relation(fields: [homestayId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([homestayId])
 }
 
 model RoomGallery {
   url         String  @id
   category    String
   description String?
-  room        Room    @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roomId      String
+  room        Room    @relation(fields: [roomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([roomId])
 }
