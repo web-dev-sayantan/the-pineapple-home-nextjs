@@ -1,4 +1,5 @@
 import { prisma } from "../../../../server/db";
+import NavBar from "../../../components/navBar";
 
 export default async function Homestay({
   params,
@@ -11,9 +12,11 @@ export default async function Homestay({
     },
   });
   return (
-    <div className="flex flex-col items-center justify-center py-4">
-      <h1 className="p-4 text-2xl text-fuchsia-400">{homestay?.name}</h1>
-      <p className="p-4">Development In Progress. . .</p>
+    <div className="flex flex-col items-center justify-center">
+      <NavBar>
+        <span className="text-fuchsia-400">{homestay?.name}</span>
+      </NavBar>
+      <div className="p-8">Development In Progress. . .</div>
     </div>
   );
 }
