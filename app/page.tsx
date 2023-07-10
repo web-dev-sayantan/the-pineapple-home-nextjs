@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DatePickerWithRange } from "../components/ui/dateRangePicker";
 
 export default function Home() {
   return (
@@ -17,6 +18,10 @@ export default function Home() {
         </h1>
       </section>
       <div className="flex flex-col items-center justify-end flex-1 w-full p-8 sm:justify-center ">
+        <div className="flex flex-col items-center justify-center w-full py-4">
+          <h1 className="py-4">Choose your Dates </h1>
+          <DatePickerWithRange />
+        </div>
         <Link href="/places" className="w-full sm:w-80 lg:w-[28rem]">
           <button className="w-full p-4 text-xl font-semibold tracking-widest rounded-md animate-pulse lg:text-2xl sm:mt-8 bg-gradient-to-br from-fuchsia-400 to-violet-700 text-slate-50">
             DIVE IN

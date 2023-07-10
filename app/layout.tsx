@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Aashiyaana",
+  title: "The pineapple Home - Manali",
   description: "Your second home, in the Himalayas",
 };
 
