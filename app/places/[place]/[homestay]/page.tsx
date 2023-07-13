@@ -65,7 +65,7 @@ export default async function Homestay({
               >
                 <div className="flex flex-col flex-grow-1">
                   {room.houseRecommendation ? (
-                    <div className="w-32 px-4 py-1 mb-2 text-xs text-center text-teal-100 bg-teal-700 rounded-2xl">
+                    <div className="px-4 py-1 mb-2 text-xs text-center text-teal-100 bg-teal-700 w-28 rounded-2xl">
                       Recommended
                     </div>
                   ) : (
