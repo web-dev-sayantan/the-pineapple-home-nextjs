@@ -86,21 +86,22 @@ model Homestay {
 }
 
 model Room {
-  id              String         @id @default(cuid())
-  name            String
-  toiletAttached  Boolean
-  airConditioned  Boolean
-  kitchenAttached Boolean
-  isDorm          Boolean
-  homestayId      String
-  description     String
-  occupancy       Int
-  category        Category[]
-  Rate            Rate[]
-  homestay        Homestay       @relation(fields: [homestayId], references: [id])
-  RoomFeatures    RoomFeatures[]
-  RoomGallery     RoomGallery[]
-  RoomReserved    RoomReserved[]
+  id                  String         @id @default(cuid())
+  name                String
+  toiletAttached      Boolean
+  airConditioned      Boolean
+  kitchenAttached     Boolean
+  isDorm              Boolean
+  homestayId          String
+  description         String
+  occupancy           Int
+  houseRecommendation Boolean        @default(false)
+  category            Category[]
+  Rate                Rate[]
+  homestay            Homestay       @relation(fields: [homestayId], references: [id])
+  RoomFeatures        RoomFeatures[]
+  RoomGallery         RoomGallery[]
+  RoomReserved        RoomReserved[]
 
   @@index([homestayId])
 }
