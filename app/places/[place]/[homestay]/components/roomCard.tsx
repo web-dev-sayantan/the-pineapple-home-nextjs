@@ -1,8 +1,9 @@
 "use client";
 import { Prisma } from "@prisma/client";
+import RateCard from "./rateCard";
 export default function RoomCard({ room }: { room: any }) {
   function getCheapestRate(rate: Prisma.RateSelect[]) {
-    return rate.sort().at(0);
+    return rate.sort((a: any, b: any) => a.tariff - b.tariff).at(0);
   }
   return (
     <div className="flex flex-col gap-4 p-4 m-4 rounded-lg bg-secondary">
@@ -39,11 +40,16 @@ export default function RoomCard({ room }: { room: any }) {
           {getCheapestRate(room.Rate)?.tariff || 1400}/-
         </span>
       </div>
+      <div className="flex flex-col">
+        {room.Rate.map((rate: any) => (
+          <RateCard key={rate.id} rate={rate}></RateCard>
+        ))}
+      </div>
       <div className="flex items-center justify-center gap-4">
         <button className="w-full px-4 py-2 rounded-sm bg-destructive text-primary">
           View Details
         </button>
-        <button className="w-full px-4 py-2 rounded-sm bg-accent text-secondary">
+        <button className="w-full px-4 py-2 rounded-sm bg-accent/80 text-secondary">
           Book
         </button>
       </div>
