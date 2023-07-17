@@ -34,7 +34,7 @@ export default function RoomCard({ room }: { room: any }) {
         </h2>
       </div>
       <div className="w-full p-2 text-center">
-        <span className="text-lg font-normal">Starting from Rs.</span>{" "}
+        <span className="text-lg font-normal">Starting from Rs. </span>{" "}
         <span className="text-xl font-extrabold text-accent">
           {getCheapestRate(room.Rate)?.tariff || 1400}/-
         </span>
