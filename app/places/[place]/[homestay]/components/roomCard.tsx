@@ -1,7 +1,10 @@
 "use client";
 import { Prisma } from "@prisma/client";
 import RateCard from "./rateCard";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 export default function RoomCard({ room }: { room: any }) {
+  const pathname = usePathname();
   function getCheapestRate(rate: Prisma.RateSelect[]) {
     return rate.sort((a: any, b: any) => a.tariff - b.tariff).at(0);
   }
@@ -16,13 +19,25 @@ export default function RoomCard({ room }: { room: any }) {
           <div>{room.houseRecommendation}</div>
         )}
         <div>{room.houseRecommendation}</div>
-        <h1 className="text-lg font-semibold text-accent/80">
-          {room.name}{" "}
-          {room.category &&
-          room.category.find((category: any) => category.id === "dormitory")
-            ? ""
-            : "Room"}
-        </h1>
+        <div className="flex items-center justify-between gap-2">
+          <h1 className="text-lg font-semibold text-accent/80">
+            {room.name}{" "}
+            {room.category &&
+            room.category.find((category: any) => category.id === "dormitory")
+              ? ""
+              : "Room"}
+          </h1>
+          <div className="flex items-center gap-2">
+            <button>
+              <span className="material-symbols-outlined">location_on</span>
+            </button>
+            <button>
+              <span className="material-symbols-outlined">
+                gallery_thumbnail
+              </span>
+            </button>
+          </div>
+        </div>
         <h2 className="flex items-center gap-4 py-2">
           {room.category?.map((category: any) => (
             <span
@@ -40,15 +55,20 @@ export default function RoomCard({ room }: { room: any }) {
           {getCheapestRate(room.Rate)?.tariff || 1400}/-
         </span>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-4">
         {room.Rate.map((rate: any) => (
           <RateCard key={rate.id} rate={rate}></RateCard>
         ))}
       </div>
       <div className="flex items-center justify-center gap-4">
-        <button className="w-full px-4 py-2 rounded-sm bg-destructive text-primary">
+        <Link
+          href={{
+            pathname: `${pathname}/${room.id}`,
+          }}
+          className="flex items-center justify-center w-full px-4 py-2 rounded-sm bg-destructive text-primary"
+        >
           View Details
-        </button>
+        </Link>
         <button className="w-full px-4 py-2 rounded-sm bg-accent/80 text-secondary">
           Book
         </button>
