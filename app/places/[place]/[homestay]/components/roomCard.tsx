@@ -29,9 +29,6 @@ export default function RoomCard({ room }: { room: any }) {
           </h1>
           <div className="flex items-center gap-2">
             <button>
-              <span className="material-symbols-outlined">location_on</span>
-            </button>
-            <button>
               <span className="material-symbols-outlined">
                 gallery_thumbnail
               </span>

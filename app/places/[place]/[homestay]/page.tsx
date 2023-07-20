@@ -18,6 +18,8 @@ export default async function Homestay({
         select: {
           name: true,
           state: true,
+          lat: true,
+          long: true,
         },
       },
       Rooms: {
@@ -37,6 +39,7 @@ export default async function Homestay({
   const homestayCoverImage = homestay?.HomestayGallery.find(
     (image) => image.category === "cover"
   );
+  const mapLink = `http://www.google.com/maps/place/${homestay?.location.lat},${homestay?.location.long}`;
   if (homestay) {
     return (
       <div className="flex flex-col items-center justify-center">
@@ -56,8 +59,15 @@ export default async function Homestay({
                 ></Image>
               ) : null}
             </div>
-            <h1 className="flex items-center justify-start p-4 font-semibold text-muted-foreground">
-              {homestay?.location.name}, {homestay?.location.state}
+            <h1 className="flex items-center justify-between w-full p-4 font-semibold text-muted-foreground">
+              <span>
+                {homestay?.location.name}, {homestay?.location.state}
+              </span>
+              <a title="Open Map Location" href={mapLink}>
+                <span className="material-symbols-outlined text-accent">
+                  location_on
+                </span>
+              </a>
             </h1>
             <div className="rooms">
               {homestay?.Rooms.map((room) => (
