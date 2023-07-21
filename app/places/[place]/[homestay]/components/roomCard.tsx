@@ -52,12 +52,12 @@ export default function RoomCard({ room }: { room: any }) {
           {getCheapestRate(room.Rate)?.tariff || 1400}/-
         </span>
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col h-full gap-4">
         {room.Rate.map((rate: any) => (
           <RateCard key={rate.id} rate={rate}></RateCard>
         ))}
       </div>
-      <div className="flex items-center justify-center gap-4">
+      {/* <div className="flex flex-col items-center justify-center">
         <Link
           href={{
             pathname: `${pathname}/${room.id}`,
@@ -66,10 +66,24 @@ export default function RoomCard({ room }: { room: any }) {
         >
           View Details
         </Link>
-        <button className="w-full px-4 py-2 rounded-sm bg-accent/80 text-secondary">
+        <div className="flex items-center w-full p-2 rounded-t-md bg-primary/20">
+          <button className="flex items-center px-2 py-1 rounded-s-md bg-destructive">
+            <span className="material-symbols-outlined">remove</span>
+          </button>
+          <input
+            className="flex-1 h-[2rem] py-1 bg-secondary/20"
+            type="number"
+            name=""
+            id=""
+          />
+          <button className="flex items-center px-2 py-1 rounded-e-md bg-muted text-primary">
+            <span className="material-symbols-outlined">add</span>
+          </button>
+        </div>
+        <button className="w-full px-4 py-2 rounded-md bg-accent/80 text-secondary">
           Book
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

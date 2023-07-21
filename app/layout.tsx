@@ -1,12 +1,12 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 import localFont from "next/font/local";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Nunito_Sans({ subsets: ["latin"] });
 
 export const metadata = {
   title: "The pineapple home - Manali",
-  description: "Your second home, in the Himalayas",
+  description: "Your second home, in the Himalayas.",
 };
 
 const materialSymbols = localFont({
