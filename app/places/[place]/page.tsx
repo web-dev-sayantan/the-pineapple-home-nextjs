@@ -9,7 +9,6 @@ export default async function Place({
   params: { place: string };
   searchParams: { id: string };
 }) {
-  console.log(searchParams);
   const homestays = await prisma.location.findFirst({
     where: {
       name: params.place,

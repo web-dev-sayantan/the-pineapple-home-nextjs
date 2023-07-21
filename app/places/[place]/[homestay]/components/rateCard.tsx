@@ -1,10 +1,17 @@
 "use client";
 
-import { Prisma } from "@prisma/client";
 import { cn } from "../../../../../lib/utils";
 import PersonsIcon from "../../../../../components/ui/personsIcon";
 
-export default function RateCard({ rate }: { rate: any }) {
+export default function RateCard({
+  rate,
+  onRateSelected,
+  isRateSelected,
+}: {
+  rate: any;
+  onRateSelected: (rate: any) => void;
+  isRateSelected: (rate: any) => boolean;
+}) {
   return (
     <div className="flex flex-col items-center w-full h-full">
       <div className="flex flex-col items-start justify-center w-full gap-2 px-4 py-3 rounded-t-md bg-primary/10">
@@ -34,9 +41,26 @@ export default function RateCard({ rate }: { rate: any }) {
           <span className="font-bold material-symbols-outlined">remove</span>
         </div>
       </div> */}
-      <div className="flex flex-col w-full p-2 bg-muted rounded-b-md">
-        <button>Select</button>
-      </div>
+      {isRateSelected(rate) ? (
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-center flex-1 p-2 font-bold rounded-bl-mdn bg-accent/80 text-secondary">
+            You chose wisely!
+          </div>
+          <button
+            className="flex items-center justify-center p-2 rounded-br-md bg-destructive"
+            onClick={() => onRateSelected(null)}
+          >
+            <span className="font-bold material-symbols-outlined">delete</span>
+          </button>
+        </div>
+      ) : (
+        <button
+          className="flex items-center justify-center w-full p-2 font-bold rounded-b-md bg-primary/20 text-accent"
+          onClick={() => onRateSelected(rate)}
+        >
+          Select
+        </button>
+      )}
     </div>
   );
 }

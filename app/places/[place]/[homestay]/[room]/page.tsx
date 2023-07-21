@@ -11,7 +11,6 @@ export default async function Room({
       id: params.room,
     },
   });
-  console.log(room);
   return (
     <div>
       <NavBar>

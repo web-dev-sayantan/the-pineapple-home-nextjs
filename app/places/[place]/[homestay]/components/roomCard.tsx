@@ -1,10 +1,6 @@
-"use client";
 import { Prisma } from "@prisma/client";
-import RateCard from "./rateCard";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import RoomRates from "./roomRates";
 export default function RoomCard({ room }: { room: any }) {
-  const pathname = usePathname();
   function getCheapestRate(rate: Prisma.RateSelect[]) {
     return rate.sort((a: any, b: any) => a.tariff - b.tariff).at(0);
   }
@@ -52,11 +48,7 @@ export default function RoomCard({ room }: { room: any }) {
           {getCheapestRate(room.Rate)?.tariff || 1400}/-
         </span>
       </div>
-      <div className="flex flex-col h-full gap-4">
-        {room.Rate.map((rate: any) => (
-          <RateCard key={rate.id} rate={rate}></RateCard>
-        ))}
-      </div>
+      <RoomRates rates={room.Rate}></RoomRates>
       {/* <div className="flex flex-col items-center justify-center">
         <Link
           href={{

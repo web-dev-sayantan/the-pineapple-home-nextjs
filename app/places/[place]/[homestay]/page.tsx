@@ -2,6 +2,7 @@ import Image from "next/image";
 import { prisma } from "../../../../server/db";
 import NavBar from "../../../components/navBar";
 import RoomCard from "./components/roomCard";
+import BookingButton from "./components/bookingButton";
 
 export default async function Homestay({
   params,
@@ -44,7 +45,7 @@ export default async function Homestay({
     return (
       <div className="relative flex flex-col items-center justify-center">
         <NavBar>
-          <span className="text-fuchsia-400">{homestay?.name}</span>
+          <span className="text-accent">{homestay?.name}</span>
         </NavBar>
         {homestay ? (
           <>
@@ -56,6 +57,7 @@ export default async function Homestay({
                     alt={homestay.name}
                     width={800}
                     height={100}
+                    priority
                     className="w-full h-60"
                   ></Image>
                 ) : null}
@@ -76,11 +78,7 @@ export default async function Homestay({
                 ))}
               </div>
             </div>
-            <div className="fixed bottom-0 w-full">
-              <button className="flex items-center justify-center w-full p-4 font-bold bg-accent text-secondary">
-                Proceed to Book
-              </button>
-            </div>
+            <BookingButton />
           </>
         ) : null}
       </div>
