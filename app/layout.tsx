@@ -1,6 +1,11 @@
 import "./globals.css";
 import { Nunito_Sans } from "next/font/google";
 import localFont from "next/font/local";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+import { HighlightInit } from "@highlight-run/next/highlight-init";
+import AuthSessionProvider from "@/context/sessionProvider";
 
 const inter = Nunito_Sans({ subsets: ["latin"] });
 
@@ -17,14 +22,28 @@ const materialSymbols = localFont({
   weight: "100 400 700",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
   return (
-    <html lang="en" className={`${materialSymbols.variable}`}>
-      <body className={inter.className}>{children}</body>
-    </html>
+    <>
+      {/* <HighlightInit
+        projectId={"4d7l96go"}
+        tracingOrigins
+        networkRecording={{
+          enabled: false,
+          recordHeadersAndBody: true,
+          urlBlocklist: ["localhost:3000"],
+        }}
+      /> */}
+      <html lang="en" className={`${materialSymbols.variable}`}>
+        <AuthSessionProvider session={session}>
+          <body className={inter.className}>{children}</body>
+        </AuthSessionProvider>
+      </html>
+    </>
   );
 }

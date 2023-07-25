@@ -9,7 +9,7 @@ export default function Home() {
           WHERE DO YOU SEE YOURSELF ON YOUR NEXT . . .
         </h1>
       </section>
-      <section className="flex items-baseline w-full px-8 sm:justify-center">
+      <section className="flex items-baseline justify-center w-full px-8">
         <h1 className="text-5xl font-bold tracking-wider delay-1000 text-accent lg:text-7xl animate-toYellow">
           VACATION
         </h1>
@@ -17,7 +17,7 @@ export default function Home() {
           ?
         </h1>
       </section>
-      <div className="flex flex-col items-center justify-end flex-1 w-full p-8 sm:justify-center ">
+      <div className="flex flex-col items-center justify-end flex-1 w-full gap-2 p-8 sm:justify-center ">
         <div className="flex flex-col items-center justify-center w-full py-8">
           <h1 className="py-4 text-lg font-semibold text-accent/70">
             Choose your <span className="text-lg text-red-400">dates</span>
@@ -29,6 +29,11 @@ export default function Home() {
             DIVE IN
           </button>
         </Link>
+        {/* <Link href="/admin" className="w-full sm:w-80 lg:w-[28rem]">
+          <button className="w-full p-2 text-lg font-semibold tracking-widest rounded-md lg:text-2xl sm:mt-8 bg-muted text-slate-50">
+            ADMIN
+          </button>
+        </Link> */}
       </div>
     </main>
   );
