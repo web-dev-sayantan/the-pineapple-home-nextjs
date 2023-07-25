@@ -34,6 +34,7 @@ export const authOptions: NextAuthOptions = {
           select: {
             id: true,
             mobile: true,
+            email: true,
             firstname: true,
             lastname: true,
             password: true,
@@ -45,17 +46,37 @@ export const authOptions: NextAuthOptions = {
         if (!admin.password) {
           return null;
         }
-        console.log(admin);
-        const validPassword = await bcrypt.compare(credentials.password, admin.password.hash)
-        console.log('Password Valid', validPassword)
+        const validPassword = await bcrypt.compare(
+          credentials.password,
+          admin.password.hash
+        );
         if (!validPassword) {
           return null;
         }
-        return admin;
+        return {
+          id: admin.id,
+          mobile: admin.mobile,
+          firstname: admin.firstname,
+        };
       },
     }),
   ],
-}
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.mobile = user.mobile;
+        token.firstname = user.firstname;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      if (token.sub) session.user.id = token.sub;
+      if (token.mobile) session.user.mobile = token.mobile as string;
+      if (token.firstname) session.user.firstname = token.firstname as string;
+      return session;
+    },
+  },
+};
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
