@@ -3,10 +3,15 @@
 import { useState } from "react";
 import RateCard from "./rateCard";
 import { useStore } from "../../../../../store";
+import { Rate } from "@prisma/client";
 
-export default function RoomRates({ rates }: { rates: any[] }) {
-  const { addSelectedRoomRates, removeSelectedRoomRates } = useStore();
-  const [selectedRate, setSelectedRate] = useState<any>(null);
+export default function RoomRates({ rates }: { rates: Rate[] }) {
+  const { addSelectedRoomRates, removeSelectedRoomRates, selectedRoomRates } =
+    useStore();
+  const [selectedRate, setSelectedRate] = useState<any>(
+    selectedRoomRates.find((rate) => rate.roomId === rates[0]?.roomId)
+  );
+
   function onRateSelected(rate: any) {
     if (rate) {
       if (selectedRate) removeSelectedRoomRates(selectedRate);
@@ -16,9 +21,11 @@ export default function RoomRates({ rates }: { rates: any[] }) {
     }
     setSelectedRate(rate);
   }
+
   function isRateSelected(rate: any) {
     return rate.id === selectedRate?.id;
   }
+
   return (
     <div className="flex flex-col h-full gap-4">
       {rates.map((rate: any) => (

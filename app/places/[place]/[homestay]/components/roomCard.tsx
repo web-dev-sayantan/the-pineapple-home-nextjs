@@ -1,8 +1,14 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Rate } from "@prisma/client";
 import RoomRates from "./roomRates";
-export default function RoomCard({ room }: { room: any }) {
-  function getCheapestRate(rate: Prisma.RateSelect[]) {
-    return rate.sort((a: any, b: any) => a.tariff - b.tariff).at(0);
+
+const roomWithRelations = Prisma.validator<Prisma.RoomDefaultArgs>()({
+  include: { category: true, Rate: true },
+});
+export type RoomWithRelations = Prisma.RoomGetPayload<typeof roomWithRelations>;
+
+export default function RoomCard({ room }: { room: RoomWithRelations }) {
+  function getCheapestRate(rates: Rate[]) {
+    return rates.sort((a: any, b: any) => a.tariff - b.tariff).at(0);
   }
   return (
     <div className="flex flex-col gap-4 p-4 m-4 rounded-lg bg-secondary">
