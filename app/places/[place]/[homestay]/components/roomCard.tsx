@@ -8,7 +8,7 @@ export type RoomWithRelations = Prisma.RoomGetPayload<typeof roomWithRelations>;
 
 export default function RoomCard({ room }: { room: RoomWithRelations }) {
   function getCheapestRate(rates: Rate[]) {
-    return rates.sort((a: any, b: any) => a.tariff - b.tariff).at(0);
+    return rates.sort((a, b) => a.tariff - b.tariff).at(0);
   }
   return (
     <div className="flex flex-col gap-4 p-4 m-4 rounded-lg bg-secondary">
@@ -25,7 +25,7 @@ export default function RoomCard({ room }: { room: RoomWithRelations }) {
           <h1 className="text-lg font-semibold text-accent/80">
             {room.name}{" "}
             {room.category &&
-            room.category.find((category: any) => category.id === "dormitory")
+            room.category.find((category) => category.id === "dormitory")
               ? ""
               : "Room"}
           </h1>
@@ -38,7 +38,7 @@ export default function RoomCard({ room }: { room: RoomWithRelations }) {
           </div>
         </div>
         <h2 className="flex items-center gap-4 py-2">
-          {room.category?.map((category: any) => (
+          {room.category?.map((category) => (
             <span
               key={category.id}
               className="w-20 py-1 text-xs text-center text-teal-300 rounded-md bg-primary/20"

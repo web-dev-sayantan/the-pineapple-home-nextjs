@@ -2,15 +2,16 @@
 
 import { cn } from "../../../../../lib/utils";
 import PersonsIcon from "../../../../../components/ui/personsIcon";
+import { Rate } from "@prisma/client";
 
 export default function RateCard({
   rate,
   onRateSelected,
   isRateSelected,
 }: {
-  rate: any;
-  onRateSelected: (rate: any) => void;
-  isRateSelected: (rate: any) => boolean;
+  rate: Rate;
+  onRateSelected: (rate: Rate | null | undefined) => void;
+  isRateSelected: (rate: Rate) => boolean;
 }) {
   return (
     <div className="flex flex-col items-center w-full h-full">
