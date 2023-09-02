@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-import { HighlightInit } from "@highlight-run/next/highlight-init";
 import AuthSessionProvider from "@/context/sessionProvider";
 
 const inter = Nunito_Sans({ subsets: ["latin"] });
@@ -30,15 +29,6 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <>
-      {/* <HighlightInit
-        projectId={"4d7l96go"}
-        tracingOrigins
-        networkRecording={{
-          enabled: false,
-          recordHeadersAndBody: true,
-          urlBlocklist: ["localhost:3000"],
-        }}
-      /> */}
       <html lang="en" className={`${materialSymbols.variable}`}>
         <AuthSessionProvider session={session}>
           <body className={inter.className}>{children}</body>
