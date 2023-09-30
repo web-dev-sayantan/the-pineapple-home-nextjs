@@ -2,12 +2,19 @@ import Link from "next/link";
 import { LocationType } from "../interfaces";
 import { Fragment } from "react";
 import Image from "next/image";
+import { db } from "../../../drizzle";
+import { homestay } from "../../../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 export default async function LocationCard({
   location,
 }: {
   location: LocationType;
 }) {
+  const homestays = await db
+    .select({ name: homestay.name })
+    .from(homestay)
+    .where(eq(homestay.locationName, location.name));
   return (
     <Fragment>
       <Link
@@ -30,7 +37,7 @@ export default async function LocationCard({
         >
           {location?.name.toUpperCase()}
         </span>
-        {location.Homestay.length ? (
+        {homestays.length ? (
           ""
         ) : (
           <span className="absolute text-sm bottom-14 text-slate-400">

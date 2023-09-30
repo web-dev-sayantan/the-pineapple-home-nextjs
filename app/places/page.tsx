@@ -1,20 +1,16 @@
-import { prisma } from "../../server/db";
 import LocationCard from "./components/location";
 import NavBar from "../components/navBar";
+import { db } from "../../drizzle";
+import { location } from "../../drizzle/schema";
 
 export default async function Places() {
-  const locations = await prisma.location.findMany({
-    select: {
-      id: true,
-      name: true,
-      coverUrl: true,
-      Homestay: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  });
+  const locations = await db
+    .select({
+      id: location.id,
+      name: location.name,
+      coverUrl: location.coverUrl,
+    })
+    .from(location);
 
   return (
     <div className="flex flex-col items-center justify-between w-full h-auto">

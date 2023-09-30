@@ -1,60 +1,78 @@
 import Image from "next/image";
-import { prisma } from "../../../../server/db";
 import NavBar from "../../../components/navBar";
 import RoomCard from "./components/roomCard";
 import BookingButton from "./components/bookingButton";
+import { db } from "@/drizzle";
+import { eq } from "drizzle-orm";
 
-export default async function Homestay({
-  params,
-}: {
-  params: { place: string; homestay: string };
-}) {
-  const homestay = await prisma.homestay.findFirst({
-    where: {
-      id: params.homestay,
-    },
-    select: {
+import { homestay } from "@/drizzle/schema";
+
+function getHomestayById(id: string) {
+  return db.query.homestay.findFirst({
+    where: eq(homestay.id, id),
+    columns: {
       name: true,
+    },
+    with: {
       location: {
-        select: {
+        columns: {
           name: true,
           state: true,
           lat: true,
           long: true,
         },
       },
-      Rooms: {
-        include: {
-          category: true,
-          Rate: true,
+      rooms: {
+        with: {
+          categories: {
+            columns: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
+          rates: {
+            columns: {
+              id: true,
+              tariff: true,
+            },
+          },
         },
       },
-      HomestayGallery: {
-        select: {
+      homestayGallery: {
+        columns: {
           url: true,
           category: true,
         },
       },
     },
   });
-  const homestayCoverImage = homestay?.HomestayGallery.find(
+}
+
+export default async function Homestay({
+  params,
+}: {
+  params: { place: string; homestay: string };
+}) {
+  const homestayData = await getHomestayById(params.homestay);
+  const homestayCoverImage = homestayData?.homestayGallery.find(
     (image) => image.category === "cover"
   );
-  const mapLink = `http://www.google.com/maps/place/${homestay?.location.lat},${homestay?.location.long}`;
+  const mapLink = `http://www.google.com/maps/place/${homestayData?.location.lat},${homestayData?.location.long}`;
   if (homestay) {
     return (
       <div className="relative flex flex-col items-center justify-center">
         <NavBar>
-          <span className="text-accent">{homestay?.name}</span>
+          <span className="text-accent">{homestayData?.name}</span>
         </NavBar>
-        {homestay ? (
+        {homestayData ? (
           <>
             <div className="w-full">
               <div className="w-full cover">
                 {homestay && homestayCoverImage ? (
                   <Image
                     src={homestayCoverImage.url}
-                    alt={homestay.name}
+                    alt={homestayData.name}
                     width={800}
                     height={100}
                     priority
@@ -64,7 +82,7 @@ export default async function Homestay({
               </div>
               <h1 className="flex items-center justify-between w-full p-4 font-semibold text-muted-foreground">
                 <span>
-                  {homestay?.location.name}, {homestay?.location.state}
+                  {homestayData.location.name}, {homestayData.location.state}
                 </span>
                 <a title="Open Map Location" href={mapLink}>
                   <span className="material-symbols-outlined text-accent">
@@ -73,7 +91,7 @@ export default async function Homestay({
                 </a>
               </h1>
               <div className="rooms">
-                {homestay?.Rooms.map((room) => (
+                {homestayData.rooms.map((room) => (
                   <RoomCard room={room} key={room.id}></RoomCard>
                 ))}
               </div>

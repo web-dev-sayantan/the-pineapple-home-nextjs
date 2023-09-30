@@ -1,15 +1,32 @@
-import { Prisma, Rate } from "@prisma/client";
+import { RateSelect } from "@/drizzle/schema";
 import RoomRates from "./roomRates";
 
-const roomWithRelations = Prisma.validator<Prisma.RoomDefaultArgs>()({
-  include: { category: true, Rate: true },
-});
-export type RoomWithRelations = Prisma.RoomGetPayload<typeof roomWithRelations>;
+type Room = {
+  id: string;
+  name: string;
+  description: string;
+  homestayId: string;
+  toiletAttached: boolean;
+  airConditioned: boolean;
+  kitchenAttached: boolean;
+  isDorm: boolean;
+  occupancy: number;
+  houseRecommendation: boolean;
+  categories: {
+    id: string;
+    name: string;
+    description: string;
+  }[];
+  rates: Partial<RateSelect>[];
+};
 
-export default function RoomCard({ room }: { room: RoomWithRelations }) {
-  function getCheapestRate(rates: Rate[]) {
-    return rates.sort((a, b) => a.tariff - b.tariff).at(0);
+export default function RoomCard({ room }: { room: Room }) {
+  function getCheapestRate(rates: Partial<RateSelect>[]) {
+    return rates
+      .sort((a, b) => (a.tariff && b.tariff ? a.tariff - b.tariff : 0))
+      .at(0);
   }
+
   return (
     <div className="flex flex-col gap-4 p-4 m-4 rounded-lg bg-secondary">
       <div className="flex flex-col flex-grow-1">
@@ -24,8 +41,8 @@ export default function RoomCard({ room }: { room: RoomWithRelations }) {
         <div className="flex items-center justify-between gap-2">
           <h1 className="text-lg font-semibold text-accent/80">
             {room.name}{" "}
-            {room.category &&
-            room.category.find((category) => category.id === "dormitory")
+            {room.categories &&
+            room.categories.find((category) => category.id === "dormitory")
               ? ""
               : "Room"}
           </h1>
@@ -38,7 +55,7 @@ export default function RoomCard({ room }: { room: RoomWithRelations }) {
           </div>
         </div>
         <h2 className="flex items-center gap-4 py-2">
-          {room.category?.map((category) => (
+          {room.categories?.map((category) => (
             <span
               key={category.id}
               className="w-20 py-1 text-xs text-center text-teal-300 rounded-md bg-primary/20"
@@ -51,10 +68,10 @@ export default function RoomCard({ room }: { room: RoomWithRelations }) {
       <div className="w-full p-2 text-center">
         <span className="text-lg font-normal">Starting from Rs. </span>{" "}
         <span className="text-xl font-extrabold text-accent">
-          {getCheapestRate(room.Rate)?.tariff || 1400}/-
+          {getCheapestRate(room.rates)?.tariff || 1400}/-
         </span>
       </div>
-      <RoomRates rates={room.Rate}></RoomRates>
+      <RoomRates rates={room.rates}></RoomRates>
       {/* <div className="flex flex-col items-center justify-center">
         <Link
           href={{

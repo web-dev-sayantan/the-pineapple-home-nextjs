@@ -9,14 +9,14 @@ export default function HomestayCard({
   homestay: {
     id: string;
     name: string;
-    HomestayGallery: {
+    homestayGallery: {
       url: string;
       category: string;
     }[];
   };
 }) {
   const pathname = usePathname();
-  const coverImage = homestay.HomestayGallery.find(
+  const coverImage = homestay.homestayGallery.find(
     (image) => image.category === "cover"
   );
   return (

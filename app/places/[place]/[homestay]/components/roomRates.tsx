@@ -3,16 +3,16 @@
 import { useState } from "react";
 import RateCard from "./rateCard";
 import { useStore } from "../../../../../store";
-import { Rate } from "@prisma/client";
+import { RateSelect } from "../../../../../drizzle/schema";
 
-export default function RoomRates({ rates }: { rates: Rate[] }) {
+export default function RoomRates({ rates }: { rates: Partial<RateSelect>[] }) {
   const { addSelectedRoomRates, removeSelectedRoomRates, selectedRoomRates } =
     useStore();
-  const [selectedRate, setSelectedRate] = useState<Rate | null | undefined>(
-    selectedRoomRates.find((rate) => rate.roomId === rates[0]?.roomId)
-  );
+  const [selectedRate, setSelectedRate] = useState<
+    Partial<RateSelect> | null | undefined
+  >(selectedRoomRates.find((rate) => rate.roomId === rates[0]?.roomId));
 
-  function onRateSelected(rate: Rate | null | undefined) {
+  function onRateSelected(rate: Partial<RateSelect> | null | undefined) {
     if (rate) {
       if (selectedRate) removeSelectedRoomRates(selectedRate);
       addSelectedRoomRates(rate);
@@ -22,7 +22,7 @@ export default function RoomRates({ rates }: { rates: Rate[] }) {
     setSelectedRate(rate);
   }
 
-  function isRateSelected(rate: Rate) {
+  function isRateSelected(rate: Partial<RateSelect>) {
     return rate.id === selectedRate?.id;
   }
 

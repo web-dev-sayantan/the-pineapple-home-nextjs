@@ -1,12 +1,13 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "../../../../server/db";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import * as bcrypt from "bcryptjs";
+import { db } from "../../../../drizzle";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // @ts-ignore
+  adapter: DrizzleAdapter(db),
   session: {
     strategy: "jwt",
   },
@@ -27,17 +28,21 @@ export const authOptions: NextAuthOptions = {
         if (!credentials || !credentials.mobile || !credentials.password) {
           return null;
         }
-        const admin = await prisma.admin.findUnique({
-          where: {
-            mobile: credentials.mobile,
-          },
-          select: {
+        const admin = await db.query.admin.findFirst({
+          where: (admin, { eq }) => eq(admin.mobile, credentials.mobile),
+          columns: {
             id: true,
             mobile: true,
             email: true,
             firstname: true,
             lastname: true,
-            password: true,
+          },
+          with: {
+            password: {
+              columns: {
+                hash: true,
+              },
+            },
           },
         });
         if (!admin) {
@@ -48,7 +53,7 @@ export const authOptions: NextAuthOptions = {
         }
         const validPassword = await bcrypt.compare(
           credentials.password,
-          admin.password.hash
+          admin.password[0].hash
         );
         if (!validPassword) {
           return null;

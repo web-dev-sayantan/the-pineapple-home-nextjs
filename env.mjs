@@ -6,7 +6,6 @@ import { z } from "zod";
  */
 const server = z.object({
   RAILWAY_DATABASE_URL: z.string().url(),
-  PLANETSCALE_DATABASE_URL: z.string().url(),
   CLOUDINARY_CLOUD_NAME: z.string(),
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
@@ -28,7 +27,6 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
-  PLANETSCALE_DATABASE_URL: process.env.PLANETSCALE_DATABASE_URL,
   RAILWAY_DATABASE_URL: process.env.RAILWAY_DATABASE_URL,
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,

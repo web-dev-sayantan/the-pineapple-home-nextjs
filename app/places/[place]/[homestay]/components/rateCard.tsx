@@ -2,16 +2,16 @@
 
 import { cn } from "../../../../../lib/utils";
 import PersonsIcon from "../../../../../components/ui/personsIcon";
-import { Rate } from "@prisma/client";
+import { RateSelect } from "../../../../../drizzle/schema";
 
 export default function RateCard({
   rate,
   onRateSelected,
   isRateSelected,
 }: {
-  rate: Rate;
-  onRateSelected: (rate: Rate | null | undefined) => void;
-  isRateSelected: (rate: Rate) => boolean;
+  rate: Partial<RateSelect>;
+  onRateSelected: (rate: Partial<RateSelect> | null | undefined) => void;
+  isRateSelected: (rate: Partial<RateSelect>) => boolean;
 }) {
   return (
     <div className="flex flex-col items-center w-full h-full">
@@ -29,7 +29,9 @@ export default function RateCard({
         </div>
         <div className="flex items-center justify-between w-full">
           <div className="flex">
-            <PersonsIcon headCount={rate.headCount}></PersonsIcon>
+            {rate.headCount && (
+              <PersonsIcon headCount={rate.headCount}></PersonsIcon>
+            )}
           </div>
           <span className="font-bold text-accent">{rate.tariff}/-</span>
         </div>

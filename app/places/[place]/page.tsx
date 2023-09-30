@@ -1,4 +1,6 @@
-import { prisma } from "../../../server/db";
+import { eq } from "drizzle-orm";
+import { db } from "../../../drizzle";
+import { homestay } from "../../../drizzle/schema";
 import NavBar from "../../components/navBar";
 import HomestayCard from "./components/homestayCard";
 
@@ -9,21 +11,17 @@ export default async function Place({
   params: { place: string };
   searchParams: { id: string };
 }) {
-  const homestays = await prisma.location.findFirst({
-    where: {
-      name: params.place,
+  const homestays = await db.query.homestay.findMany({
+    where: eq(homestay.locationName, params.place),
+    columns: {
+      id: true,
+      name: true,
     },
-    select: {
-      Homestay: {
-        select: {
-          id: true,
-          name: true,
-          HomestayGallery: {
-            select: {
-              url: true,
-              category: true,
-            },
-          },
+    with: {
+      homestayGallery: {
+        columns: {
+          url: true,
+          category: true,
         },
       },
     },
@@ -37,8 +35,8 @@ export default async function Place({
         </span>
       </NavBar>
       <div className="flex flex-col items-center justify-center w-full gap-8 p-8">
-        {homestays?.Homestay.length ? (
-          homestays?.Homestay.map((homestay) => (
+        {homestays?.length ? (
+          homestays.map((homestay) => (
             <HomestayCard key={homestay.id} homestay={homestay}></HomestayCard>
           ))
         ) : (
