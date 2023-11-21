@@ -3,7 +3,7 @@ import { Nunito_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/utils/next-auth";
 
 import AuthSessionProvider from "@/context/sessionProvider";
 import { cn } from "../lib/utils";
