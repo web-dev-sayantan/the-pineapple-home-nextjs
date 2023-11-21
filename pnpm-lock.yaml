@@ -118,6 +118,9 @@ dependencies:
     version: 4.4.6(@types/react@18.2.16)(react@18.2.0)
 
 devDependencies:
+  '@next/env':
+    specifier: ^14.0.3
+    version: 14.0.3
   '@types/bcryptjs':
     specifier: 2.4.2
     version: 2.4.2
@@ -690,7 +693,6 @@ packages:
 
   /@next/env@14.0.3:
     resolution: {integrity: sha512-7xRqh9nMvP5xrW4/+L0jgRRX+HoNRGnfJpD+5Wq6/13j3dsdzxO3BCXn7D3hMqsDb+vjZnJq+vI7+EtgrYZTeA==}
-    dev: false
 
   /@next/eslint-plugin-next@13.4.7:
     resolution: {integrity: sha512-ANEPltxzXbyyG7CvqxdY4PmeM5+RyWdAJGufTHnU+LA/i3J6IDV2r8Z4onKwskwKEhwqzz5lMaSYGGXLyHX+mg==}
