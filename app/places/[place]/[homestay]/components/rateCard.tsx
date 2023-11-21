@@ -17,18 +17,18 @@ export default function RateCard({
     <div className="flex flex-col items-center w-full h-full">
       <div className="flex flex-col items-start justify-center w-full gap-2 px-4 py-3 rounded-t-md bg-primary/10">
         <div className="flex items-center justify-between w-full">
-          <span className="text-sm">Tariff per night for </span>
+          <span className="text-sm text-primary">Tariff per night for </span>
           <span
             className={cn(
               "px-2 py-1 text-xs font-semibold rounded-sm text-primary",
-              `${rate.refundable ? "bg-accent/40" : "bg-destructive/60"}`
+              `${rate.refundable ? "bg-accent/40" : "bg-destructive/30"}`
             )}
           >
             {rate.refundable ? "refundable" : "non-refundable"}
           </span>
         </div>
         <div className="flex items-center justify-between w-full">
-          <div className="flex">
+          <div className="flex text-primary">
             {rate.headCount && (
               <PersonsIcon headCount={rate.headCount}></PersonsIcon>
             )}
@@ -53,7 +53,7 @@ export default function RateCard({
             className="flex items-center justify-center p-2 rounded-br-md bg-destructive"
             onClick={() => onRateSelected(null)}
           >
-            <span className="font-bold material-symbols-outlined">delete</span>
+            <i className="font-bold material-symbol-outlined">delete</i>
           </button>
         </div>
       ) : (

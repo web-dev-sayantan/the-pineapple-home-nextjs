@@ -4,8 +4,8 @@ import { DatePickerWithRange } from "../components/ui/dateRangePicker";
 export default function Home() {
   return (
     <main className="flex flex-col items-start justify-between w-full h-full ">
-      <section className="flex flex-1 w-full p-8 sm:items-center sm:justify-center bg-gradient-to-b md:bg-gradient-to-r from-accent/40 to-accent bg-clip-text">
-        <h1 className="flex flex-wrap my-3 text-2xl font-bold leading-loose tracking-widest text-transparent lg:text-4xl">
+      <section className="flex flex-1 w-full p-8 sm:items-center sm:justify-center ">
+        <h1 className="flex flex-wrap my-3 text-2xl font-bold leading-loose tracking-widest text-primary lg:text-4xl">
           WHERE DO YOU SEE YOURSELF ON YOUR NEXT . . .
         </h1>
       </section>
@@ -25,7 +25,7 @@ export default function Home() {
           <DatePickerWithRange className="text-accent/80" />
         </div>
         <Link href="/places" className="w-full sm:w-80 lg:w-[28rem]">
-          <button className="w-full p-4 text-xl font-semibold tracking-widest rounded-md animate-pulse lg:text-2xl sm:mt-8 bg-gradient-to-br from-accent/80 to-accent/40 text-slate-50">
+          <button className="w-full p-4 text-xl font-semibold tracking-widest rounded-md animate-pulse lg:text-2xl sm:mt-8 bg-gradient-to-br from-primary/80 to-accent/40 text-slate-50">
             DIVE IN
           </button>
         </Link>

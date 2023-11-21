@@ -2,9 +2,8 @@ import Image from "next/image";
 import NavBar from "../../../components/navBar";
 import RoomCard from "./components/roomCard";
 import BookingButton from "./components/bookingButton";
-import { db } from "@/drizzle";
 import { eq } from "drizzle-orm";
-
+import { db } from "@/drizzle";
 import { homestay } from "@/drizzle/schema";
 
 function getHomestayById(id: string) {
@@ -35,6 +34,7 @@ function getHomestayById(id: string) {
             columns: {
               id: true,
               tariff: true,
+              headCount: true,
             },
           },
         },
@@ -63,7 +63,7 @@ export default async function Homestay({
     return (
       <div className="relative flex flex-col items-center justify-center">
         <NavBar>
-          <span className="text-accent">{homestayData?.name}</span>
+          <span className="text-primary">{homestayData?.name}</span>
         </NavBar>
         {homestayData ? (
           <>
@@ -80,14 +80,14 @@ export default async function Homestay({
                   ></Image>
                 ) : null}
               </div>
-              <h1 className="flex items-center justify-between w-full p-4 font-semibold text-muted-foreground">
+              <h1 className="flex items-center justify-between w-full p-4 font-semibold text-primary/70">
                 <span>
                   {homestayData.location.name}, {homestayData.location.state}
                 </span>
                 <a title="Open Map Location" href={mapLink}>
-                  <span className="material-symbols-outlined text-accent">
+                  <i className="material-symbol-outlined text-primary">
                     location_on
-                  </span>
+                  </i>
                 </a>
               </h1>
               <div className="rooms">

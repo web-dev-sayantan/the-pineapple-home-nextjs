@@ -1,16 +1,24 @@
 import "./globals.css";
 import { Nunito_Sans } from "next/font/google";
 import localFont from "next/font/local";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 import AuthSessionProvider from "@/context/sessionProvider";
+import { cn } from "../lib/utils";
+import dynamic from "next/dynamic";
+
+const ThemeProvider = dynamic(() => import("../components/theme-provider"), {
+  ssr: false,
+});
 
 const inter = Nunito_Sans({ subsets: ["latin"] });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "The pineapple home - Manali",
   description: "Your second home, in the Himalayas.",
+  metadataBase: new URL("https://thepineapplehome.in"),
 };
 
 const materialSymbols = localFont({
@@ -29,9 +37,23 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <>
-      <html lang="en" className={`${materialSymbols.variable}`}>
+      <html lang="en" className={cn("h-full", materialSymbols.variable)}>
         <AuthSessionProvider session={session}>
-          <body className={inter.className}>{children}</body>
+          <body
+            className={cn(
+              "relative h-full antialiased font-sans",
+              inter.className
+            )}
+          >
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              enableColorScheme
+            >
+              {children}
+            </ThemeProvider>
+          </body>
         </AuthSessionProvider>
       </html>
     </>

@@ -39,7 +39,7 @@ export default function RoomCard({ room }: { room: Room }) {
         )}
         <div>{room.houseRecommendation}</div>
         <div className="flex items-center justify-between gap-2">
-          <h1 className="text-lg font-semibold text-accent/80">
+          <h1 className="text-lg font-semibold text-primary">
             {room.name}{" "}
             {room.categories &&
             room.categories.find((category) => category.id === "dormitory")
@@ -48,9 +48,9 @@ export default function RoomCard({ room }: { room: Room }) {
           </h1>
           <div className="flex items-center gap-2">
             <button>
-              <span className="material-symbols-outlined">
+              <i className="material-symbol-outlined text-primary">
                 gallery_thumbnail
-              </span>
+              </i>
             </button>
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function RoomCard({ room }: { room: Room }) {
           {room.categories?.map((category) => (
             <span
               key={category.id}
-              className="w-20 py-1 text-xs text-center text-teal-300 rounded-md bg-primary/20"
+              className="w-20 py-1 text-xs text-center rounded-md text-primary bg-primary/10"
             >
               {category.name}
             </span>

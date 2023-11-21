@@ -15,9 +15,9 @@ export default async function Places() {
   return (
     <div className="flex flex-col items-center justify-between w-full h-auto">
       <NavBar>
-        <span>
+        <span className="text-sm">
           Places you might&nbsp;
-          <span className=" text-fuchsia-400">Like</span>
+          <span className="text-primary">Like</span>
         </span>
       </NavBar>
       <div className="flex flex-col flex-wrap items-center w-full h-full gap-8 p-8 sm:h-auto sm:flex-row justify-evenly sm:justify-start sm:gap-12">
