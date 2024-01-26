@@ -13,15 +13,15 @@ export default function NavBar({ children }: { children: React.ReactNode }) {
       </Button>
       <h1 className="text-xl tracking-wider">{children}</h1>
       <div className="flex items-center gap-4">
-        <div className="hidden md:block">
+        <div className="block">
           <ModeToggle size={1.2}></ModeToggle>
         </div>
-        <div className="fixed bottom-4 md:hidden">
+        {/* <div className="fixed bottom-4 md:hidden">
           <ModeToggle size={2.4}></ModeToggle>
-        </div>
-        <Button variant="outline" size="icon">
+        </div> */}
+        {/* <Button variant="outline" size="icon">
           <HamburgerMenuIcon />
-        </Button>
+        </Button> */}
       </div>
     </nav>
   );

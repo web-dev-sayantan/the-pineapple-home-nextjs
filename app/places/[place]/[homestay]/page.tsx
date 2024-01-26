@@ -2,12 +2,23 @@ import Image from "next/image";
 import NavBar from "../../../components/navBar";
 import RoomCard from "./components/roomCard";
 import BookingButton from "./components/bookingButton";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
 import { eq } from "drizzle-orm";
 import { db } from "@/drizzle";
 import { homestay } from "@/drizzle/schema";
 
 function getHomestayById(id: string) {
-  return db.query.homestay.findFirst({
+  if (typeof id !== "string" || id.trim() === "") {
+    throw new Error("Invalid id parameter");
+  }
+  const homestayData = db.query.homestay.findFirst({
     where: eq(homestay.id, id),
     columns: {
       name: true,
@@ -47,6 +58,11 @@ function getHomestayById(id: string) {
       },
     },
   });
+  if (!homestayData) {
+    throw new Error(`Homestay with id ${id} not found`);
+  }
+
+  return homestayData;
 }
 
 export default async function Homestay({
@@ -55,7 +71,7 @@ export default async function Homestay({
   params: { place: string; homestay: string };
 }) {
   const homestayData = await getHomestayById(params.homestay);
-  const homestayCoverImage = homestayData?.homestayGallery.find(
+  const homestayCoverImages = homestayData?.homestayGallery.filter(
     (image) => image.category === "cover"
   );
   const mapLink = `http://www.google.com/maps/place/${homestayData?.location.lat},${homestayData?.location.long}`;
@@ -68,17 +84,46 @@ export default async function Homestay({
         {homestayData ? (
           <>
             <div className="w-full">
-              <div className="w-full cover">
-                {homestay && homestayCoverImage ? (
-                  <Image
-                    src={homestayCoverImage.url}
-                    alt={homestayData.name}
-                    width={800}
-                    height={100}
-                    priority
-                    className="w-full h-60"
-                  ></Image>
+              <div className="relative w-full cover">
+                {homestay && homestayCoverImages ? (
+                  <>
+                    <Carousel
+                      opts={{
+                        align: "start",
+                      }}
+                      className="w-full max-w-sm"
+                    >
+                      <CarouselContent>
+                        {homestayCoverImages.map((image) => (
+                          <CarouselItem
+                            key={image.url}
+                            className="md:basis-1/2 lg:basis-1/3"
+                          >
+                            <div className="p-1">
+                              <Card>
+                                <CardContent className="flex items-center justify-center p-6 aspect-square">
+                                  <Image
+                                    src={image.url}
+                                    alt={homestayData.name}
+                                    width={800}
+                                    height={200}
+                                    priority
+                                    className="w-full h-full"
+                                  />
+                                </CardContent>
+                              </Card>
+                            </div>
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious />
+                      <CarouselNext />
+                    </Carousel>
+                  </>
                 ) : null}
+                <div className="absolute top-0 flex-wrap p-4 text-6xl tracking-wide text-purple-200 capitalize">
+                  {homestayData.name}
+                </div>
               </div>
               <h1 className="flex items-center justify-between w-full p-4 font-semibold text-primary/70">
                 <span>
@@ -92,7 +137,7 @@ export default async function Homestay({
               </h1>
               <div className="rooms">
                 {homestayData.rooms.map((room) => (
-                  <RoomCard room={room} key={room.id}></RoomCard>
+                  <RoomCard room={room} key={room.id} />
                 ))}
               </div>
             </div>

@@ -26,7 +26,9 @@ export default function HomestayCard({
           pathname: `${pathname}/${homestay.id}`,
         }}
         prefetch={true}
-        className={`flex relative flex-col items-center justify-center w-full h-48 bg-blend-darken rounded-lg sm:w-60 text-slate-200 bg-violet-600`}
+        className={
+          "flex relative flex-col items-center justify-center w-full h-48 bg-blend-darken rounded-lg sm:w-60 text-slate-200 bg-violet-600"
+        }
       >
         {coverImage ? (
           <Image
@@ -36,10 +38,12 @@ export default function HomestayCard({
             priority={true}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="rounded-lg filter brightness-50"
-          ></Image>
+          />
         ) : null}
         <span
-          className={`absolute text-xl font-semibold tracking-widest first-letter:text-3xl first-letter:text-fuchsia-200`}
+          className={
+            "absolute text-xl font-semibold tracking-widest first-letter:text-3xl first-letter:text-fuchsia-200"
+          }
         >
           {homestay?.name.toUpperCase()}
         </span>
