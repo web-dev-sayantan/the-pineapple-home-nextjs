@@ -2,77 +2,76 @@ import { RateSelect } from "@/drizzle/schema";
 import RoomRates from "./roomRates";
 
 type Room = {
-  id: string;
-  name: string;
-  description: string;
-  homestayId: string;
-  toiletAttached: boolean;
-  airConditioned: boolean;
-  kitchenAttached: boolean;
-  isDorm: boolean;
-  occupancy: number;
-  houseRecommendation: boolean;
-  categories: {
-    id: string;
-    name: string;
-    description: string;
-  }[];
-  rates: Partial<RateSelect>[];
+	id: string;
+	name: string;
+	description: string;
+	homestayId: string;
+	toiletAttached: boolean;
+	airConditioned: boolean;
+	kitchenAttached: boolean;
+	isDorm: boolean;
+	occupancy: number;
+	houseRecommendation: boolean;
+	categories: {
+		id: string;
+		name: string;
+		description: string;
+	}[];
+	rates: Partial<RateSelect>[];
 };
 
 export default function RoomCard({ room }: { room: Room }) {
-  function getCheapestRate(rates: Partial<RateSelect>[]) {
-    return rates
-      .sort((a, b) => (a.tariff && b.tariff ? a.tariff - b.tariff : 0))
-      .at(0);
-  }
+	function getCheapestRate(rates: Partial<RateSelect>[]) {
+		return rates
+			.sort((a, b) => (a.tariff && b.tariff ? a.tariff - b.tariff : 0))
+			.at(0);
+	}
 
-  return (
-    <div className="flex flex-col gap-4 p-4 m-4 rounded-lg bg-secondary">
-      <div className="flex flex-col flex-grow-1">
-        {room.houseRecommendation ? (
-          <div className="w-32 px-4 py-1 mb-2 text-xs text-center text-teal-100 bg-teal-700 rounded-2xl">
-            Recommended
-          </div>
-        ) : (
-          <div>{room.houseRecommendation}</div>
-        )}
-        <div>{room.houseRecommendation}</div>
-        <div className="flex items-center justify-between gap-2">
-          <h1 className="text-lg font-semibold text-primary">
-            {room.name}{" "}
-            {room.categories &&
-            room.categories.find((category) => category.id === "dormitory")
-              ? ""
-              : "Room"}
-          </h1>
-          <div className="flex items-center gap-2">
-            <button>
-              <i className="material-symbol-outlined text-primary">
-                gallery_thumbnail
-              </i>
-            </button>
-          </div>
-        </div>
-        <h2 className="flex items-center gap-4 py-2">
-          {room.categories?.map((category) => (
-            <span
-              key={category.id}
-              className="w-20 py-1 text-xs text-center rounded-md text-primary bg-primary/10"
-            >
-              {category.name}
-            </span>
-          ))}
-        </h2>
-      </div>
-      <div className="w-full p-2 text-center">
-        <span className="text-lg font-normal">Starting from Rs. </span>{" "}
-        <span className="text-xl font-extrabold text-accent">
-          {getCheapestRate(room.rates)?.tariff || 1400}/-
-        </span>
-      </div>
-      <RoomRates rates={room.rates}></RoomRates>
-      {/* <div className="flex flex-col items-center justify-center">
+	return (
+		<div className="flex flex-col gap-4 p-4 m-4 rounded-lg bg-secondary">
+			<div className="flex flex-col flex-grow-1">
+				{room.houseRecommendation ? (
+					<div className="w-32 px-4 py-1 mb-2 text-xs text-center text-teal-100 bg-teal-700 rounded-2xl">
+						Recommended
+					</div>
+				) : (
+					<div>{room.houseRecommendation}</div>
+				)}
+				<div>{room.houseRecommendation}</div>
+				<div className="flex items-center justify-between gap-2">
+					<h1 className="text-lg font-semibold text-primary">
+						{room.name}{" "}
+						{room.categories?.find((category) => category.id === "dormitory")
+							? ""
+							: "Room"}
+					</h1>
+					<div className="flex items-center gap-2">
+						<button type="button">
+							<i className="material-symbol-outlined text-primary">
+								gallery_thumbnail
+							</i>
+						</button>
+					</div>
+				</div>
+				<h2 className="flex items-center gap-4 py-2">
+					{room.categories?.map((category) => (
+						<span
+							key={category.id}
+							className="w-20 py-1 text-xs text-center rounded-md text-primary bg-primary/10"
+						>
+							{category.name}
+						</span>
+					))}
+				</h2>
+			</div>
+			<div className="w-full p-2 text-center">
+				<span className="text-lg font-normal">Starting from Rs. </span>{" "}
+				<span className="text-xl font-extrabold text-accent">
+					{getCheapestRate(room.rates)?.tariff || 1400}/-
+				</span>
+			</div>
+			<RoomRates rates={room.rates} />
+			{/* <div className="flex flex-col items-center justify-center">
         <Link
           href={{
             pathname: `${pathname}/${room.id}`,
@@ -99,6 +98,6 @@ export default function RoomCard({ room }: { room: Room }) {
           Book
         </button>
       </div> */}
-    </div>
-  );
+		</div>
+	);
 }

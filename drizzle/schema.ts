@@ -309,6 +309,7 @@ export const homestayGallery = pgTable(
     url: text("url").primaryKey().notNull(),
     category: text("category").notNull(),
     description: text("description"),
+    isPrimary: boolean("isPrimary").notNull().default(false),
     homestayId: text("homestayId")
       .notNull()
       .references(() => homestay.id, {
@@ -359,6 +360,7 @@ export const roomGallery = pgTable(
     url: text("url").primaryKey().notNull(),
     category: text("category").notNull(),
     description: text("description"),
+    isPrimary: boolean("isPrimary").notNull().default(false),
     roomId: text("roomId")
       .notNull()
       .references(() => room.id, { onDelete: "cascade", onUpdate: "cascade" }),
@@ -389,6 +391,7 @@ export const rate = pgTable(
   "Rate",
   {
     id: text("id").primaryKey().notNull(),
+    type: text("type").notNull().default("B2B"),
     headCount: integer("headCount").notNull(),
     tariff: integer("tariff").notNull(),
     refundable: boolean("refundable").notNull(),
@@ -404,22 +407,6 @@ export const rate = pgTable(
 );
 
 export type RateSelect = InferSelectModel<typeof rate>;
-
-export const prismaMigrations = pgTable("_prisma_migrations", {
-  id: varchar("id", { length: 36 }).primaryKey().notNull(),
-  checksum: varchar("checksum", { length: 64 }).notNull(),
-  finishedAt: timestamp("finished_at", { withTimezone: true, mode: "string" }),
-  migrationName: varchar("migration_name", { length: 255 }).notNull(),
-  logs: text("logs"),
-  rolledBackAt: timestamp("rolled_back_at", {
-    withTimezone: true,
-    mode: "string",
-  }),
-  startedAt: timestamp("started_at", { withTimezone: true, mode: "string" })
-    .defaultNow()
-    .notNull(),
-  appliedStepsCount: integer("applied_steps_count").default(0).notNull(),
-});
 
 export const category = pgTable("Category", {
   id: text("id").primaryKey().notNull(),
@@ -445,11 +432,19 @@ export const roomRelations = relations(room, ({ one, many }) => ({
   }),
   categories: many(category),
   rates: many(rate),
+  roomGallery: many(roomGallery),
 }));
 
 export const rateRelations = relations(rate, ({ one, many }) => ({
   room: one(room, {
     fields: [rate.roomId],
+    references: [room.id],
+  }),
+}));
+
+export const roomGalleryRelations = relations(roomGallery, ({ one, many }) => ({
+  room: one(room, {
+    fields: [roomGallery.roomId],
     references: [room.id],
   }),
 }));
