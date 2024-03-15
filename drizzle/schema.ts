@@ -10,6 +10,7 @@ import {
   numeric,
   boolean,
   varchar,
+  serial,
 } from "drizzle-orm/pg-core";
 
 import { InferSelectModel, relations } from "drizzle-orm";
@@ -476,15 +477,104 @@ export const homestayAmenitiesRelations = relations(
   })
 );
 
-export const AdminPasswordRelations = relations(adminPassword, ({ one }) => ({
+export const adminPasswordRelations = relations(adminPassword, ({ one }) => ({
   password: one(admin, {
     fields: [adminPassword.adminId],
     references: [admin.id],
   }),
 }));
 
-export const AdminRelations = relations(admin, ({ many }) => ({
+export const adminRelations = relations(admin, ({ many }) => ({
   password: many(adminPassword),
 }));
 
-// export const adminPass
+export const invoice = pgTable("Invoice", {
+  id: serial("id").primaryKey().notNull(),
+  guestName: text("guestName").notNull(),
+  invoiceDate: timestamp("invoiceDate").notNull(),
+  checkinDate: timestamp("checkinDate").notNull(),
+  checkoutDate: timestamp("checkoutDate").notNull(),
+});
+
+export const invoiceAccomodation = pgTable(
+  "InvoiceAccomodation",
+  {
+    id: serial("id").primaryKey().notNull(),
+    name: text("name").notNull(),
+    quantity: integer("quantity").notNull(),
+    rate: integer("rate").notNull(),
+    invoiceId: integer("invoiceId")
+      .notNull()
+      .references(() => invoice.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+  },
+  (table) => {
+    return {
+      invoiceIdIdx: index("InvoiceAccomodation_invoiceId_idx").on(
+        table.invoiceId
+      ),
+    };
+  }
+);
+
+export const invoiceFood = pgTable(
+  "InvoiceFood",
+  {
+    id: serial("id").primaryKey().notNull(),
+    type: text("type").notNull(),
+    name: text("name").notNull(),
+    quantity: integer("quantity").notNull(),
+    rate: integer("rate").notNull(),
+    invoiceId: integer("invoiceId")
+      .notNull()
+      .references(() => invoice.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+  },
+  (table) => {
+    return {
+      invoiceIdIdx: index("InvoiceFood_invoiceId_idx").on(table.invoiceId),
+    };
+  }
+);
+
+export const invoiceAmenities = pgTable(
+  "InvoiceAmenities",
+  {
+    id: serial("id").primaryKey().notNull(),
+    name: text("name").notNull(),
+    quantity: integer("quantity").notNull(),
+    rate: integer("rate").notNull(),
+    invoiceId: integer("invoiceId")
+      .notNull()
+      .references(() => invoice.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+  },
+  (table) => {
+    return {
+      invoiceIdIdx: index("InvoiceAmenities_invoiceId_idx").on(table.invoiceId),
+    };
+  }
+);
+
+export const invoiceRelations = relations(invoice, ({ many }) => ({
+  accomodation: many(invoiceAccomodation),
+  food: many(invoiceFood),
+  amenities: many(invoiceAmenities),
+}));
+
+// export const InvoiceRelationsSelect = select(InvoiceRelations, {
+//   id: Invoice.id,
+//   guestName: Invoice.guestName,
+//   invoiceDate: Invoice.invoiceDate,
+//   checkinDate: Invoice.checkinDate,
+//   checkoutDate: Invoice.checkoutDate,
+//   accomodation: InvoiceAccomodation,
+//   food: InvoiceFood,
+//   amenities: InvoiceAmenities,
+// });
