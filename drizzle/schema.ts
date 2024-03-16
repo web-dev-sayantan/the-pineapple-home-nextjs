@@ -568,13 +568,26 @@ export const invoiceRelations = relations(invoice, ({ many }) => ({
   amenities: many(invoiceAmenities),
 }));
 
-// export const InvoiceRelationsSelect = select(InvoiceRelations, {
-//   id: Invoice.id,
-//   guestName: Invoice.guestName,
-//   invoiceDate: Invoice.invoiceDate,
-//   checkinDate: Invoice.checkinDate,
-//   checkoutDate: Invoice.checkoutDate,
-//   accomodation: InvoiceAccomodation,
-//   food: InvoiceFood,
-//   amenities: InvoiceAmenities,
-// });
+export const accomodationRelations = relations(
+  invoiceAccomodation,
+  ({ one }) => ({
+    invoice: one(invoice, {
+      fields: [invoiceAccomodation.invoiceId],
+      references: [invoice.id],
+    }),
+  })
+);
+
+export const foodRelations = relations(invoiceFood, ({ one }) => ({
+  invoice: one(invoice, {
+    fields: [invoiceFood.invoiceId],
+    references: [invoice.id],
+  }),
+}));
+
+export const amenitiesRelations = relations(invoiceAmenities, ({ one }) => ({
+  invoice: one(invoice, {
+    fields: [invoiceAmenities.invoiceId],
+    references: [invoice.id],
+  }),
+}));

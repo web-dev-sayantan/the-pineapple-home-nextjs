@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/places/[place]"
+    "app/places/[place]",
+    "drizzle/seed.mjs"
   ],
   "exclude": ["node_modules"]
 }

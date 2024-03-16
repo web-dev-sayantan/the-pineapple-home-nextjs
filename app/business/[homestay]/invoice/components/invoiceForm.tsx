@@ -1,7 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-//@ts-ignore
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { useFieldArray, useForm } from "react-hook-form";
 import { invoiceSchema } from "../shared/shared-code";
@@ -352,23 +351,21 @@ export default function InvoiceForm() {
 							Next
 						</button>
 					</div>
-					<button
-						type="submit"
-						className="px-4 py-1 text-lg font-semibold rounded-md bg-primary text-primary-foreground "
-					>
-						Generate Invoice
-					</button>
+					<SubmitButton />
 				</div>
 			</form>
 		</Form>
 	);
 }
-
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function zodToFormData(obj: any) {
-	const formData = new FormData();
-	for (const key of Object.keys(obj)) {
-		formData.append(key, obj[key]);
-	}
-	return formData;
+function SubmitButton() {
+	const { pending } = useFormStatus();
+	return (
+		<Button
+			type="submit"
+			className="px-4 py-1 text-lg font-semibold rounded-md bg-primary text-primary-foreground"
+			aria-disabled={pending}
+		>
+			{pending ? "Generating Invoice..." : "Generate Invoice"}
+		</Button>
+	);
 }

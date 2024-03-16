@@ -23,53 +23,23 @@ export type Item = {
   rate: number;
 };
 
+const itemSchema = z.object({
+  name: z.string(),
+  quantity: z.coerce.number(),
+  rate: z.coerce.number(),
+});
+
 export const invoiceSchema = z.object({
   guestName: z.string().trim().min(1, "Guest name is required"),
   invoiceDate: z.date(),
   checkinDate: z.date(),
   checkoutDate: z.date(),
-  accomodation: z.array(
-    z.object({
-      name: z.string(),
-      quantity: z.number(),
-      rate: z.number(),
-    })
-  ),
+  accomodation: z.array(itemSchema),
   food: z.object({
-    breakfast: z.array(
-      z.object({
-        name: z.string(),
-        quantity: z.number(),
-        rate: z.number(),
-      })
-    ),
-    lunch: z.array(
-      z.object({
-        name: z.string(),
-        quantity: z.number(),
-        rate: z.number(),
-      })
-    ),
-    snacks: z.array(
-      z.object({
-        name: z.string(),
-        quantity: z.number(),
-        rate: z.number(),
-      })
-    ),
-    dinner: z.array(
-      z.object({
-        name: z.string(),
-        quantity: z.number(),
-        rate: z.number(),
-      })
-    ),
+    breakfast: z.array(itemSchema),
+    lunch: z.array(itemSchema),
+    snacks: z.array(itemSchema),
+    dinner: z.array(itemSchema),
   }),
-  amenities: z.array(
-    z.object({
-      name: z.string(),
-      quantity: z.number(),
-      rate: z.number(),
-    })
-  ),
+  amenities: z.array(itemSchema),
 });

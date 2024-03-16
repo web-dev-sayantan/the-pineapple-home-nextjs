@@ -136,11 +136,7 @@ export default function FormPage({
 					className="mb-2 font-bold text-primary hover:bg-primary/90 hover:text-primary-foreground"
 					onClick={(e) => {
 						e.preventDefault();
-						items.append({
-							name: "Room 101",
-							quantity: 2,
-							rate: 1500,
-						});
+						onAppend();
 					}}
 				>
 					Add Item

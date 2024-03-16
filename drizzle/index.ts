@@ -6,5 +6,16 @@ if (!process.env.RAILWAY_DATABASE_URL) {
   throw new Error("DATABASE_URL is missing");
 }
 
-const client = postgres(process.env.RAILWAY_DATABASE_URL);
-export const db = drizzle(client, { schema });
+// biome-ignore lint/complexity/noBannedTypes: <explanation>
+let client: postgres.Sql<{}>;
+
+if (process.env.NODE_ENV === "production") {
+  client = postgres(process.env.RAILWAY_DATABASE_URL);
+} else {
+  if (!global.client) {
+    global.client = postgres(process.env.RAILWAY_DATABASE_URL);
+  }
+  client = global.client;
+}
+const clients = postgres(process.env.RAILWAY_DATABASE_URL);
+export const db = drizzle(client, { schema, logger: true });

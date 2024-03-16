@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { Invoice, invoiceSchema } from "../shared/shared-code";
+import { createInvoice } from "@/data/admin/invoice-dto";
 export type InvoiceFormState = {
   success: boolean;
   error?: z.ZodError<z.infer<typeof invoiceSchema>>;
@@ -40,7 +41,11 @@ export async function generateInvoice(
       }),
     };
   }
+  const result = await createInvoice(parsedFormData.data);
   return {
+    fields: {
+      id: result[0].id.toString(),
+    },
     success: true,
     message: "Invoice generated successfully",
   };
