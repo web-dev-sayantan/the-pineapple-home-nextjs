@@ -12,9 +12,12 @@ let client: postgres.Sql<{}>;
 if (process.env.NODE_ENV === "production") {
   client = postgres(process.env.RAILWAY_DATABASE_URL);
 } else {
+  //@ts-ignore
   if (!global.client) {
+    //@ts-ignore
     global.client = postgres(process.env.RAILWAY_DATABASE_URL);
   }
+  //@ts-ignore
   client = global.client;
 }
 const clients = postgres(process.env.RAILWAY_DATABASE_URL);
