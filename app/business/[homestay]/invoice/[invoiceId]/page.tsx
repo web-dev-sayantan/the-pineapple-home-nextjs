@@ -1,11 +1,13 @@
 import PrintButton from "../components/PrintButton";
 import NavBar from "@/app/components/navBar";
 import { getInvoiceById } from "@/data/admin/invoice-dto";
+import { getHomestayById } from "@/data/homestay-dto";
 
 export default async function Invoice({
 	params,
 }: { params: { invoiceId: string; homestay: string } }) {
 	const data = await getInvoiceById(+params.invoiceId);
+	const homestay = await getHomestayById(params.homestay);
 	console.log(params);
 	return (
 		<div className="w-full">
@@ -16,8 +18,8 @@ export default async function Invoice({
 				<div className="w-full p-8">
 					<div className="flex flex-col items-center justify-between md:flex-row">
 						<div className="flex flex-col w-full gap-3 md:gap-2">
-							<h1 className="flex items-center justify-center mb-8 text-xl font-bold underline md:mb-0 text-primary md:font-normal md:justify-start md:text-3xl">
-								{params.homestay}
+							<h1 className="flex items-center justify-center mb-8 text-xl font-bold underline capitalize underline-offset-2 md:no-underline md:mb-0 text-primary md:font-normal md:justify-start md:text-3xl">
+								{homestay?.name}
 							</h1>
 							<h2 className="flex items-center w-full gap-2 md:justify-start md:text-lg">
 								<span className="font-bold min-w-[5rem] md:min-w-[1rem]">
