@@ -20,4 +20,7 @@ if (process.env.NODE_ENV === "production") {
   //@ts-ignore
   client = global.client;
 }
-export const db = drizzle(client, { schema, logger: true });
+export const db = drizzle(client, {
+  schema,
+  logger: process.env.NODE_ENV !== "production",
+});

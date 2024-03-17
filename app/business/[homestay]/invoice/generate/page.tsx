@@ -5,7 +5,6 @@ import NavBar from "@/app/components/navBar";
 export default function CreateInvoice({
 	params,
 }: { params: { homestay: string } }) {
-	console.log("params", params);
 	return (
 		<>
 			<NavBar>Generate Invoice</NavBar>

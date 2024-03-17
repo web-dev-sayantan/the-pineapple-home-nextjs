@@ -11,7 +11,6 @@ import {
   invoiceFood,
 } from "@/drizzle/schema";
 import { and, eq } from "drizzle-orm";
-import { PgTableWithColumns } from "drizzle-orm/pg-core";
 
 export async function getAllInvoices(homestayId: string) {
   return await db.query.invoice.findMany({
@@ -72,7 +71,6 @@ export async function createInvoice(invoiceData: Invoice, homestayId: string) {
       isDeleted: false,
     })
     .returning();
-  console.log("newInvoice", newInvoice);
   await Promise.all([
     ...invoiceData.accomodation.map(async (item) => {
       return await db
@@ -145,87 +143,10 @@ export async function createInvoice(invoiceData: Invoice, homestayId: string) {
         .returning();
     }),
   ]);
-  // for (const item of invoiceData.accomodation) {
-  //   await db
-  //     .insert(invoiceAccomodation)
-  //     .values({
-  //       name: item.name,
-  //       quantity: +item.quantity,
-  //       rate: +item.rate,
-  //       invoiceId: +newInvoice[0].id,
-  //     })
-  //     .returning();
-  // }
-
-  // for (const item of invoiceData.food.breakfast) {
-  //   await db
-  //     .insert(invoiceFood)
-  //     .values({
-  //       type: FoodTypesEnum.enumValues[0],
-  //       name: item.name,
-  //       quantity: +item.quantity,
-  //       rate: +item.rate,
-  //       invoiceId: +newInvoice[0].id,
-  //     })
-  //     .returning();
-  // }
-
-  // for (const item of invoiceData.food.lunch) {
-  //   await db
-  //     .insert(invoiceFood)
-  //     .values({
-  //       type: FoodTypesEnum.enumValues[1],
-  //       name: item.name,
-  //       quantity: +item.quantity,
-  //       rate: +item.rate,
-  //       invoiceId: +newInvoice[0].id,
-  //     })
-  //     .returning();
-  // }
-
-  // for (const item of invoiceData.food.snacks) {
-  //   await db
-  //     .insert(invoiceFood)
-  //     .values({
-  //       type: FoodTypesEnum.enumValues[3],
-  //       name: item.name,
-  //       quantity: +item.quantity,
-  //       rate: +item.rate,
-  //       invoiceId: +newInvoice[0].id,
-  //     })
-  //     .returning();
-  // }
-
-  // for (const item of invoiceData.food.dinner) {
-  //   await db
-  //     .insert(invoiceFood)
-  //     .values({
-  //       type: FoodTypesEnum.enumValues[2],
-  //       name: item.name,
-  //       quantity: +item.quantity,
-  //       rate: +item.rate,
-  //       invoiceId: +newInvoice[0].id,
-  //     })
-  //     .returning();
-  // }
-
-  // for (const item of invoiceData.amenities) {
-  //   await db
-  //     .insert(invoiceAmenities)
-  //     .values({
-  //       name: item.name,
-  //       quantity: +item.quantity,
-  //       rate: +item.rate,
-  //       invoiceId: +newInvoice[0].id,
-  //     })
-  //     .returning();
-  // }
-
   return newInvoice;
 }
 
 export async function updateInvoice(invoiceData: Invoice) {
-  console.log("invoiceData", invoiceData);
   if (!invoiceData.id) {
     return;
   }

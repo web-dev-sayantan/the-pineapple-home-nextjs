@@ -26,7 +26,6 @@ export async function generateInvoice(
   rawFormData.accomodation = JSON.parse(rawFormData.accomodation as string);
   rawFormData.food = JSON.parse(rawFormData.food as string);
   rawFormData.amenities = JSON.parse(rawFormData.amenities as string);
-  console.log("rawFormData", rawFormData);
   const parsedFormData = await invoiceSchema.safeParseAsync(rawFormData, {
     async: true,
   });
@@ -40,7 +39,6 @@ export async function generateInvoice(
       message: "Invalid form data",
       fields,
       issues: parsedFormData.error?.issues.map((issue) => {
-        console.log("issue", issue);
         return issue.message;
       }),
     };
