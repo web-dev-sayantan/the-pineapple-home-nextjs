@@ -169,41 +169,7 @@ export default function InvoiceForm({
 								control={form.control}
 								name={"invoiceDate" as DateFieldsType}
 								render={({ field }) => (
-									<FormItem className="flex flex-col w-full">
-										<FormLabel>{"Invoice date"}</FormLabel>
-										<Popover>
-											<PopoverTrigger asChild>
-												<FormControl>
-													<Button
-														variant={"outline"}
-														className={cn(
-															"w-full pl-3 text-left font-normal hover:bg-background",
-															!field.value && "text-muted-foreground",
-														)}
-													>
-														{field.value ? (
-															format(field.value, "PPP")
-														) : (
-															<span>Pick a date</span>
-														)}
-														<CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
-													</Button>
-												</FormControl>
-											</PopoverTrigger>
-											<PopoverContent className="w-auto p-0" align="start">
-												<Calendar
-													mode="single"
-													selected={field.value}
-													onSelect={field.onChange}
-													disabled={(date) =>
-														date > new Date() || date < new Date("2023-12-12")
-													}
-													initialFocus
-												/>
-											</PopoverContent>
-										</Popover>
-										<FormMessage />
-									</FormItem>
+									<DatePicker label="Invoice date" field={field} />
 								)}
 							/>
 						</div>
@@ -212,7 +178,7 @@ export default function InvoiceForm({
 								control={form.control}
 								name={"checkinDate" as DateFieldsType}
 								render={({ field }) => (
-									<DatePicker label="Invoice date" field={field} />
+									<DatePicker label="Checkin date" field={field} />
 								)}
 							/>
 						</div>
@@ -221,7 +187,7 @@ export default function InvoiceForm({
 								control={form.control}
 								name={"checkoutDate" as DateFieldsType}
 								render={({ field }) => (
-									<DatePicker label="Invoice date" field={field} />
+									<DatePicker label="Checkout date" field={field} />
 								)}
 							/>
 						</div>
