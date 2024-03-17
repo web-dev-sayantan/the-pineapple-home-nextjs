@@ -47,7 +47,23 @@ export default async function Invoice({
 										</span>
 									</div>
 								</CardContent>
-								<CardFooter className="flex items-center justify-end w-full">
+								<CardFooter className="flex flex-col items-center justify-end w-full gap-2">
+									<div className="flex items-center justify-between w-full gap-2">
+										<Link href={`invoice/${invoice.id}`} className="w-full">
+											<Button
+												variant="accent"
+												className="w-full hover:text-primary-foreground"
+											>
+												Edit
+											</Button>
+										</Link>
+										<Button
+											variant="destructive"
+											className="hover:bg-destructive/80 hover:text-primary-foreground"
+										>
+											Delete
+										</Button>
+									</div>
 									<Link href={`invoice/${invoice.id}`} className="w-full">
 										<Button
 											variant="default"
