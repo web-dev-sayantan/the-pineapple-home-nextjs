@@ -7,16 +7,21 @@ import {
   invoiceAmenities,
   invoiceFood,
 } from "@/drizzle/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
-export async function getAllInvoices() {
-  return await db.query.invoice.findMany({});
+export async function getAllInvoices(homestayId: string) {
+  return await db.query.invoice.findMany({
+    where: and(
+      eq(invoice.homestayId, homestayId),
+      eq(invoice.isDeleted, false)
+    ),
+  });
 }
 
-export async function getInvoiceById(invoiceId: number) {
+export async function getInvoiceById(invoiceId: number, homestayId: string) {
   try {
     return await db.query.invoice.findFirst({
-      where: eq(invoice.id, invoiceId as number),
+      where: and(eq(invoice.id, invoiceId), eq(invoice.homestayId, homestayId)),
       with: {
         accomodation: {
           columns: {

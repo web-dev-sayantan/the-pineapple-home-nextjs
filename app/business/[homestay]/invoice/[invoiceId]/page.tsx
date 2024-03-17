@@ -8,7 +8,7 @@ export default async function Invoice({
 	params,
 }: { params: { invoiceId: string; homestay: string } }) {
 	const [data, homestay] = await Promise.all([
-		getInvoiceById(+params.invoiceId),
+		getInvoiceById(+params.invoiceId, params.homestay),
 		getHomestayById(params.homestay),
 	]);
 	const breakfast = data?.food.filter(
