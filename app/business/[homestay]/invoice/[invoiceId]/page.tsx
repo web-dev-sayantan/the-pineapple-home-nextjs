@@ -2,13 +2,27 @@ import PrintButton from "../components/PrintButton";
 import NavBar from "@/app/components/navBar";
 import { getInvoiceById } from "@/data/admin/invoice-dto";
 import { getHomestayById } from "@/data/homestay-dto";
+import { FoodTypesEnum } from "@/drizzle/schema";
 
 export default async function Invoice({
 	params,
 }: { params: { invoiceId: string; homestay: string } }) {
-	const data = await getInvoiceById(+params.invoiceId);
-	const homestay = await getHomestayById(params.homestay);
-	console.log(params);
+	const [data, homestay] = await Promise.all([
+		getInvoiceById(+params.invoiceId),
+		getHomestayById(params.homestay),
+	]);
+	const breakfast = data?.food.filter(
+		(item) => item.type === FoodTypesEnum.enumValues[0],
+	);
+	const lunch = data?.food.filter(
+		(item) => item.type === FoodTypesEnum.enumValues[1],
+	);
+	const dinner = data?.food.filter(
+		(item) => item.type === FoodTypesEnum.enumValues[2],
+	);
+	const snacks = data?.food.filter(
+		(item) => item.type === FoodTypesEnum.enumValues[3],
+	);
 	return (
 		<div className="w-full">
 			<div className="print:hidden">
@@ -63,7 +77,7 @@ export default async function Invoice({
 							<h1 className="flex-1 font-bold text-right md:text-xl">Rate</h1>
 							<h1 className="flex-1 font-bold text-right md:text-xl">Total</h1>
 						</div>
-						<h1 className="w-full p-1 px-2 mb-2 font-semibold text-center rounded-sm bg-primary/10">
+						<h1 className="w-full p-1 px-2 mt-2 mb-2 font-semibold text-center rounded-sm bg-primary/10">
 							Accomodation
 						</h1>
 						<div className="flex flex-col w-full py-2">
@@ -84,16 +98,130 @@ export default async function Invoice({
 								</div>
 							))}
 						</div>
-						<h1 className="w-full p-1 px-2 my-2 font-semibold text-center rounded-sm text-md bg-primary/10">
-							Food
-						</h1>
-						<div className="flex flex-col w-full">
-							<div className="flex px-4 py-1 italic text-secondary-foreground/80">
-								-- Breakfast --
-							</div>
-							{data.food.map((item) => (
-								<div key={item.id}>
-									{item.type === "breakfast" && (
+						{data.food.length ? (
+							<h1 className="w-full p-1 px-2 my-2 font-semibold text-center rounded-sm text-md bg-primary/10">
+								Food
+							</h1>
+						) : null}
+						{
+							/* Breakfast */
+							breakfast?.length ? (
+								<div className="flex flex-col w-full">
+									<div className="flex px-4 py-1 italic text-secondary-foreground/80">
+										-- Breakfast --
+									</div>
+									{breakfast.map((item) => (
+										<div key={item.id}>
+											<div className="flex items-center w-full px-4">
+												<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
+													{item.name}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													{item.quantity}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													Rs. {item.rate}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													Rs. {item.rate * item.quantity}
+												</div>
+											</div>
+										</div>
+									))}
+								</div>
+							) : null
+						}
+						{
+							/* Lunch */
+							lunch?.length ? (
+								<div className="flex flex-col w-full">
+									<div className="flex px-4 py-1 italic text-secondary-foreground/80">
+										-- Lunch --
+									</div>
+									{lunch.map((item) => (
+										<div key={item.id}>
+											<div className="flex items-center w-full px-4">
+												<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
+													{item.name}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													{item.quantity}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													Rs. {item.rate}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													Rs. {item.rate * item.quantity}
+												</div>
+											</div>
+										</div>
+									))}
+								</div>
+							) : null
+						}
+						{
+							/* Snacks */
+							snacks?.length ? (
+								<div className="flex flex-col w-full">
+									<div className="flex px-4 py-1 italic text-secondary-foreground/80">
+										-- Snacks --
+									</div>
+									{snacks.map((item) => (
+										<div key={item.id}>
+											<div className="flex items-center w-full px-4">
+												<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
+													{item.name}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													{item.quantity}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													Rs. {item.rate}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													Rs. {item.rate * item.quantity}
+												</div>
+											</div>
+										</div>
+									))}
+								</div>
+							) : null
+						}
+						{
+							/* Dinner */
+							dinner?.length ? (
+								<div className="flex flex-col w-full">
+									<div className="flex px-4 py-1 italic text-secondary-foreground/80">
+										-- Dinner --
+									</div>
+									{dinner.map((item) => (
+										<div key={item.id}>
+											<div className="flex items-center w-full px-4">
+												<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
+													{item.name}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													{item.quantity}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													Rs. {item.rate}
+												</div>
+												<div className="flex-1 font-semibold text-right md:text-xl">
+													Rs. {item.rate * item.quantity}
+												</div>
+											</div>
+										</div>
+									))}
+								</div>
+							) : null
+						}
+						{data.amenities.length ? (
+							<>
+								<h1 className="w-full p-1 px-2 my-2 font-semibold text-center rounded-sm text-md bg-primary/10">
+									Others
+								</h1>
+								<div className="flex flex-col w-full">
+									{data.amenities.map((item) => (
 										<div className="flex items-center w-full px-4">
 											<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
 												{item.name}
@@ -108,81 +236,10 @@ export default async function Invoice({
 												Rs. {item.rate * item.quantity}
 											</div>
 										</div>
-									)}
+									))}
 								</div>
-							))}
-						</div>
-						<div className="flex flex-col w-full">
-							<div className="flex px-4 py-1 italic text-secondary-foreground/80">
-								-- Lunch --
-							</div>
-							{data.food.map((item) => (
-								<div key={item.id}>
-									{item.type === "lunch" && (
-										<div className="flex items-center w-full px-4">
-											<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
-												{item.name}
-											</div>
-											<div className="flex-1 font-semibold text-right md:text-xl">
-												{item.quantity}
-											</div>
-											<div className="flex-1 font-semibold text-right md:text-xl">
-												Rs. {item.rate}
-											</div>
-											<div className="flex-1 font-semibold text-right md:text-xl">
-												Rs. {item.rate * item.quantity}
-											</div>
-										</div>
-									)}
-								</div>
-							))}
-						</div>
-						<div className="flex flex-col w-full">
-							<div className="flex px-4 py-1 italic text-secondary-foreground/80">
-								-- Dinner --
-							</div>
-							{data.food.map((item) => (
-								<div key={item.id}>
-									{item.type === "dinner" && (
-										<div className="flex items-center w-full px-4">
-											<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
-												{item.name}
-											</div>
-											<div className="flex-1 font-semibold text-right md:text-xl">
-												{item.quantity}
-											</div>
-											<div className="flex-1 font-semibold text-right md:text-xl">
-												Rs. {item.rate}
-											</div>
-											<div className="flex-1 font-semibold text-right md:text-xl">
-												Rs. {item.rate * item.quantity}
-											</div>
-										</div>
-									)}
-								</div>
-							))}
-						</div>
-						<h1 className="w-full p-1 px-2 my-2 font-semibold text-center rounded-sm text-md bg-primary/10">
-							Others
-						</h1>
-						<div className="flex flex-col w-full">
-							{data.amenities.map((item) => (
-								<div className="flex items-center w-full px-4">
-									<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
-										{item.name}
-									</div>
-									<div className="flex-1 font-semibold text-right md:text-xl">
-										{item.quantity}
-									</div>
-									<div className="flex-1 font-semibold text-right md:text-xl">
-										Rs. {item.rate}
-									</div>
-									<div className="flex-1 font-semibold text-right md:text-xl">
-										Rs. {item.rate * item.quantity}
-									</div>
-								</div>
-							))}
-						</div>
+							</>
+						) : null}
 						<div className="flex items-center w-full px-2 py-1 my-4 rounded-md bg-primary/10">
 							<div className="flex text-lg font-bold md:text-2xl basis-3/4">
 								Total

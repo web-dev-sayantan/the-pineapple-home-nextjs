@@ -46,12 +46,14 @@ export default async function Invoice() {
 									</div>
 								</CardContent>
 								<CardFooter className="flex items-center justify-end w-full">
-									<Button
-										variant="default"
-										className="w-full md:w-auto hover:bg-primary/80 hover:text-primary-foreground"
-									>
-										<Link href={`invoice/${invoice.id}`}>View</Link>
-									</Button>
+									<Link href={`invoice/${invoice.id}`} className="w-full">
+										<Button
+											variant="default"
+											className="w-full hover:bg-primary/80 hover:text-primary-foreground"
+										>
+											View Invoice
+										</Button>
+									</Link>
 								</CardFooter>
 							</Card>
 						))}
