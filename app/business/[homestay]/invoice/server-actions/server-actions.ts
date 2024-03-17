@@ -25,7 +25,6 @@ export async function generateInvoice(
   const parsedFormData = await invoiceSchema.safeParseAsync(rawFormData, {
     async: true,
   });
-  console.log("parsedFormData", parsedFormData);
   if (!parsedFormData.success) {
     const fields: Record<string, string> = {};
     for (const key of Object.keys(rawFormData)) {
@@ -36,12 +35,14 @@ export async function generateInvoice(
       message: "Invalid form data",
       fields,
       issues: parsedFormData.error?.issues.map((issue) => {
-        console.log(issue.path);
         return issue.message;
       }),
     };
   }
-  const result = await createInvoice(parsedFormData.data);
+  const result = await createInvoice(
+    parsedFormData.data,
+    rawFormData.homestayId
+  );
   return {
     fields: {
       id: result[0].id.toString(),

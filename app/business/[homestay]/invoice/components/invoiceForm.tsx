@@ -29,7 +29,8 @@ import { X } from "lucide-react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 
-export default function InvoiceForm() {
+export default function InvoiceForm({ homestayId }: { homestayId: string }) {
+	console.log(homestayId);
 	const [state, formAction] = useFormState(generateInvoice, {
 		success: false,
 	});
@@ -111,6 +112,7 @@ export default function InvoiceForm() {
 				action={formAction}
 				ref={formRef}
 				onSubmit={(event) => {
+					console.log("submitted");
 					event.preventDefault();
 					form.handleSubmit(() => {
 						const formData = new FormData();
@@ -127,6 +129,7 @@ export default function InvoiceForm() {
 							"checkoutDate",
 							form.getValues("checkoutDate").toString(),
 						);
+						formData.append("homestayId", homestayId);
 						formData.append(
 							"accomodation",
 							JSON.stringify(form.getValues("accomodation")),

@@ -20,5 +20,4 @@ if (process.env.NODE_ENV === "production") {
   //@ts-ignore
   client = global.client;
 }
-const clients = postgres(process.env.RAILWAY_DATABASE_URL);
 export const db = drizzle(client, { schema, logger: true });

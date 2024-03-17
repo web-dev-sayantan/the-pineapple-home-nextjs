@@ -30,7 +30,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/places/[place]",
-    "drizzle/seed.mjs"
+    "drizzle/seed.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -11,13 +11,14 @@ import {
   boolean,
   varchar,
   serial,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 
 import { InferSelectModel, relations } from "drizzle-orm";
 
 export const location = pgTable("Location", {
   id: text("id").primaryKey().notNull(),
-  name: text("name").notNull(),
+  name: text("name").unique().notNull(),
   lat: doublePrecision("lat").notNull(),
   long: doublePrecision("long").notNull(),
   state: text("state").notNull(),
@@ -29,6 +30,7 @@ export const location = pgTable("Location", {
 export type Location = typeof location.$inferSelect;
 export type NewLocation = typeof location.$inferInsert;
 
+// Admin Table
 export const admin = pgTable(
   "Admin",
   {
@@ -57,6 +59,7 @@ export const admin = pgTable(
   }
 );
 
+// Admin Password Table
 export const adminPassword = pgTable(
   "AdminPassword",
   {
@@ -72,6 +75,7 @@ export const adminPassword = pgTable(
   }
 );
 
+// Homestay Table
 export const homestay = pgTable(
   "Homestay",
   {
@@ -94,6 +98,7 @@ export const homestay = pgTable(
   }
 );
 
+// Guest Table
 export const guest = pgTable(
   "Guest",
   {
@@ -111,6 +116,7 @@ export const guest = pgTable(
   }
 );
 
+// User Table
 export const user = pgTable(
   "User",
   {
@@ -139,6 +145,7 @@ export const user = pgTable(
   }
 );
 
+// Reservation Table
 export const reservation = pgTable(
   "Reservation",
   {
@@ -173,6 +180,7 @@ export const reservation = pgTable(
   }
 );
 
+// Homestay Amenities Table
 export const homestayAmenities = pgTable(
   "HomestayAmenities",
   {
@@ -204,6 +212,7 @@ export const homestayAmenities = pgTable(
   }
 );
 
+// Room Reserved Table
 export const roomReserved = pgTable(
   "RoomReserved",
   {
@@ -233,6 +242,7 @@ export const roomReserved = pgTable(
   }
 );
 
+// Food Plan Table
 export const foodPlan = pgTable(
   "FoodPlan",
   {
@@ -251,6 +261,7 @@ export const foodPlan = pgTable(
   }
 );
 
+// Room Table
 export const room = pgTable(
   "Room",
   {
@@ -279,6 +290,7 @@ export const room = pgTable(
   }
 );
 
+// Room Features Table
 export const roomFeatures = pgTable(
   "RoomFeatures",
   {
@@ -304,6 +316,7 @@ export const roomFeatures = pgTable(
   }
 );
 
+// Homestay Gallery
 export const homestayGallery = pgTable(
   "HomestayGallery",
   {
@@ -327,6 +340,7 @@ export const homestayGallery = pgTable(
   }
 );
 
+// Amenity Table
 export const amenity = pgTable(
   "Amenity",
   {
@@ -341,6 +355,7 @@ export const amenity = pgTable(
   }
 );
 
+// Feature Table
 export const feature = pgTable(
   "Feature",
   {
@@ -355,6 +370,7 @@ export const feature = pgTable(
   }
 );
 
+// Room Gallery Table
 export const roomGallery = pgTable(
   "RoomGallery",
   {
@@ -373,6 +389,7 @@ export const roomGallery = pgTable(
   }
 );
 
+// Password Table
 export const password = pgTable(
   "Password",
   {
@@ -388,6 +405,7 @@ export const password = pgTable(
   }
 );
 
+// Rate Table
 export const rate = pgTable(
   "Rate",
   {
@@ -409,6 +427,7 @@ export const rate = pgTable(
 
 export type RateSelect = InferSelectModel<typeof rate>;
 
+// Category Table
 export const category = pgTable("Category", {
   id: text("id").primaryKey().notNull(),
   name: text("name").notNull(),
@@ -418,6 +437,99 @@ export const category = pgTable("Category", {
     onUpdate: "cascade",
   }),
 });
+
+// Invoice Table
+export const invoice = pgTable("Invoice", {
+  id: serial("id").primaryKey().notNull(),
+  guestName: text("guestName").notNull(),
+  invoiceDate: timestamp("invoiceDate").notNull(),
+  checkinDate: timestamp("checkinDate").notNull(),
+  checkoutDate: timestamp("checkoutDate").notNull(),
+  isDeleted: boolean("isDeleted").notNull().default(false),
+  homestayId: text("homestayId")
+    .notNull()
+    .references(() => homestay.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
+});
+
+// Invoice Accomodation Table
+export const invoiceAccomodation = pgTable(
+  "InvoiceAccomodation",
+  {
+    id: serial("id").$type<number>().primaryKey().notNull(),
+    name: text("name").notNull(),
+    quantity: integer("quantity").notNull(),
+    rate: integer("rate").notNull(),
+    invoiceId: integer("invoiceId")
+      .notNull()
+      .references(() => invoice.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+  },
+  (table) => {
+    return {
+      invoiceIdIdx: index("InvoiceAccomodation_invoiceId_idx").on(
+        table.invoiceId
+      ),
+    };
+  }
+);
+
+// Food Types Enum
+export const FoodTypesEnum = pgEnum("type", [
+  "breakfast",
+  "lunch",
+  "dinner",
+  "snacks",
+]);
+
+// Invoice Food Table
+export const invoiceFood = pgTable(
+  "InvoiceFood",
+  {
+    id: serial("id").primaryKey().notNull(),
+    type: FoodTypesEnum("type").notNull(),
+    name: text("name").notNull(),
+    quantity: integer("quantity").notNull(),
+    rate: integer("rate").notNull(),
+    invoiceId: integer("invoiceId")
+      .notNull()
+      .references(() => invoice.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+  },
+  (table) => {
+    return {
+      invoiceIdIdx: index("InvoiceFood_invoiceId_idx").on(table.invoiceId),
+    };
+  }
+);
+
+// Invoice Amenities Table
+export const invoiceAmenities = pgTable(
+  "InvoiceAmenities",
+  {
+    id: serial("id").primaryKey().notNull(),
+    name: text("name").notNull(),
+    quantity: integer("quantity").notNull(),
+    rate: integer("rate").notNull(),
+    invoiceId: integer("invoiceId")
+      .notNull()
+      .references(() => invoice.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+  },
+  (table) => {
+    return {
+      invoiceIdIdx: index("InvoiceAmenities_invoiceId_idx").on(table.invoiceId),
+    };
+  }
+);
 
 export const categoryRelations = relations(category, ({ one, many }) => ({
   rooms: one(room, {
@@ -487,80 +599,6 @@ export const adminPasswordRelations = relations(adminPassword, ({ one }) => ({
 export const adminRelations = relations(admin, ({ many }) => ({
   password: many(adminPassword),
 }));
-
-export const invoice = pgTable("Invoice", {
-  id: serial("id").primaryKey().notNull(),
-  guestName: text("guestName").notNull(),
-  invoiceDate: timestamp("invoiceDate").notNull(),
-  checkinDate: timestamp("checkinDate").notNull(),
-  checkoutDate: timestamp("checkoutDate").notNull(),
-});
-
-export const invoiceAccomodation = pgTable(
-  "InvoiceAccomodation",
-  {
-    id: serial("id").primaryKey().notNull(),
-    name: text("name").notNull(),
-    quantity: integer("quantity").notNull(),
-    rate: integer("rate").notNull(),
-    invoiceId: integer("invoiceId")
-      .notNull()
-      .references(() => invoice.id, {
-        onDelete: "cascade",
-        onUpdate: "cascade",
-      }),
-  },
-  (table) => {
-    return {
-      invoiceIdIdx: index("InvoiceAccomodation_invoiceId_idx").on(
-        table.invoiceId
-      ),
-    };
-  }
-);
-
-export const invoiceFood = pgTable(
-  "InvoiceFood",
-  {
-    id: serial("id").primaryKey().notNull(),
-    type: text("type").notNull(),
-    name: text("name").notNull(),
-    quantity: integer("quantity").notNull(),
-    rate: integer("rate").notNull(),
-    invoiceId: integer("invoiceId")
-      .notNull()
-      .references(() => invoice.id, {
-        onDelete: "cascade",
-        onUpdate: "cascade",
-      }),
-  },
-  (table) => {
-    return {
-      invoiceIdIdx: index("InvoiceFood_invoiceId_idx").on(table.invoiceId),
-    };
-  }
-);
-
-export const invoiceAmenities = pgTable(
-  "InvoiceAmenities",
-  {
-    id: serial("id").primaryKey().notNull(),
-    name: text("name").notNull(),
-    quantity: integer("quantity").notNull(),
-    rate: integer("rate").notNull(),
-    invoiceId: integer("invoiceId")
-      .notNull()
-      .references(() => invoice.id, {
-        onDelete: "cascade",
-        onUpdate: "cascade",
-      }),
-  },
-  (table) => {
-    return {
-      invoiceIdIdx: index("InvoiceAmenities_invoiceId_idx").on(table.invoiceId),
-    };
-  }
-);
 
 export const invoiceRelations = relations(invoice, ({ many }) => ({
   accomodation: many(invoiceAccomodation),

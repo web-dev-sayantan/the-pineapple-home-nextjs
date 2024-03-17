@@ -20,7 +20,7 @@
 *.pem
 
 # Prisma Seed File
-/prisma/seed.ts
+/drizzle/seed.ts
 
 # debug
 npm-debug.log*

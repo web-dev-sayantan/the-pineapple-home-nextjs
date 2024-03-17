@@ -24,9 +24,9 @@ export type Item = {
 };
 
 const itemSchema = z.object({
-  name: z.string(),
-  quantity: z.coerce.number(),
-  rate: z.coerce.number(),
+  name: z.string().min(1, "Item name is required"),
+  quantity: z.coerce.number().min(0, "Quantity cannot be negative"),
+  rate: z.coerce.number().min(1, "Rate cannot be negative"),
 });
 
 export const invoiceSchema = z.object({

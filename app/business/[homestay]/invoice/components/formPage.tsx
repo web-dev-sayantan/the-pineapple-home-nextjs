@@ -112,7 +112,12 @@ export default function FormPage({
 								render={({ field }) => (
 									<FormItem className="flex flex-col w-full">
 										<FormLabel>
-											Rate per {type === "accomodation" ? "night" : "plate"}
+											Rate per{" "}
+											{type === "accomodation"
+												? "night"
+												: type === "amenities"
+												  ? "unit"
+												  : "plate"}
 											(INR):
 										</FormLabel>
 										<Input

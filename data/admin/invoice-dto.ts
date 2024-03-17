@@ -1,6 +1,7 @@
 import { Invoice } from "@/app/business/[homestay]/invoice/shared/shared-code";
 import { db } from "@/drizzle";
 import {
+  FoodTypesEnum,
   invoice,
   invoiceAccomodation,
   invoiceAmenities,
@@ -14,22 +15,18 @@ export async function getAllInvoices() {
 
 export async function getInvoiceById(invoiceId: number) {
   try {
-    const invoiceData = await db.query.invoice.findFirst({
+    return await db.query.invoice.findFirst({
       where: eq(invoice.id, invoiceId as number),
-    });
-    if (invoiceData) {
-      const [accomodation, food, amenities] = await Promise.all([
-        db.query.invoiceAccomodation.findMany({
-          where: eq(invoiceAccomodation.invoiceId, invoiceData.id),
+      with: {
+        accomodation: {
           columns: {
             id: true,
             name: true,
             quantity: true,
             rate: true,
           },
-        }),
-        db.query.invoiceFood.findMany({
-          where: eq(invoiceFood.invoiceId, invoiceData.id),
+        },
+        food: {
           columns: {
             id: true,
             type: true,
@@ -37,31 +34,61 @@ export async function getInvoiceById(invoiceId: number) {
             quantity: true,
             rate: true,
           },
-        }),
-        db.query.invoiceAmenities.findMany({
-          where: eq(invoiceAmenities.invoiceId, invoiceData.id),
+        },
+        amenities: {
           columns: {
             id: true,
             name: true,
             quantity: true,
             rate: true,
           },
-        }),
-      ]);
-      return {
-        ...invoiceData,
-        accomodation,
-        food,
-        amenities,
-      };
-    }
+        },
+      },
+    });
+    // if (invoiceData) {
+    //   const [food, amenities] = await Promise.all([
+    //     // db.query.invoiceAccomodation.findMany({
+    //     //   where: eq(invoiceAccomodation.invoiceId, invoiceData.id),
+    //     //   columns: {
+    //     //     id: true,
+    //     //     name: true,
+    //     //     quantity: true,
+    //     //     rate: true,
+    //     //   },
+    //     // }),
+    //     db.query.invoiceFood.findMany({
+    //       where: eq(invoiceFood.invoiceId, invoiceData.id),
+    //       columns: {
+    //         id: true,
+    //         type: true,
+    //         name: true,
+    //         quantity: true,
+    //         rate: true,
+    //       },
+    //     }),
+    //     db.query.invoiceAmenities.findMany({
+    //       where: eq(invoiceAmenities.invoiceId, invoiceData.id),
+    //       columns: {
+    //         id: true,
+    //         name: true,
+    //         quantity: true,
+    //         rate: true,
+    //       },
+    //     }),
+    //   ]);
+    //   return {
+    //     ...invoiceData,
+    //     food,
+    //     amenities,
+    //   };
+    // }
   } catch (error) {
     console.error(error);
     return null;
   }
 }
 
-export async function createInvoice(invoiceData: Invoice) {
+export async function createInvoice(invoiceData: Invoice, homestayId: string) {
   const newInvoice = await db
     .insert(invoice)
     .values({
@@ -69,6 +96,8 @@ export async function createInvoice(invoiceData: Invoice) {
       invoiceDate: invoiceData.invoiceDate,
       checkinDate: invoiceData.checkinDate,
       checkoutDate: invoiceData.checkoutDate,
+      homestayId,
+      isDeleted: false,
     })
     .returning();
 
@@ -88,7 +117,7 @@ export async function createInvoice(invoiceData: Invoice) {
     await db
       .insert(invoiceFood)
       .values({
-        type: "breakfast",
+        type: FoodTypesEnum.enumValues[0],
         name: item.name,
         quantity: +item.quantity,
         rate: +item.rate,
@@ -101,7 +130,7 @@ export async function createInvoice(invoiceData: Invoice) {
     await db
       .insert(invoiceFood)
       .values({
-        type: "lunch",
+        type: FoodTypesEnum.enumValues[1],
         name: item.name,
         quantity: +item.quantity,
         rate: +item.rate,
@@ -114,7 +143,7 @@ export async function createInvoice(invoiceData: Invoice) {
     await db
       .insert(invoiceFood)
       .values({
-        type: "snacks",
+        type: FoodTypesEnum.enumValues[3],
         name: item.name,
         quantity: +item.quantity,
         rate: +item.rate,
@@ -127,7 +156,7 @@ export async function createInvoice(invoiceData: Invoice) {
     await db
       .insert(invoiceFood)
       .values({
-        type: "dinner",
+        type: FoodTypesEnum.enumValues[2],
         name: item.name,
         quantity: +item.quantity,
         rate: +item.rate,
