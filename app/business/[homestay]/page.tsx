@@ -18,7 +18,7 @@ export default async function RoomsB2B({
 	const homestay = await getHomestayById(params.homestay);
 	return (
 		<div className="flex flex-col items-center gap-8">
-			<NavBar>{homestay[0].name}</NavBar>
+			<NavBar>{homestay?.name}</NavBar>
 			<div className="flex flex-col w-full gap-8 px-4">
 				{rooms?.map((room) => (
 					<RoomCard
