@@ -1,10 +1,12 @@
 import { z } from "zod";
 
 export type Invoice = {
+  id?: number;
   guestName: string;
   invoiceDate: Date;
   checkinDate: Date;
   checkoutDate: Date;
+  homestayId?: string;
   accomodation: Item[];
   food: Food;
   amenities: Item[];
@@ -18,6 +20,7 @@ export type Food = {
 };
 
 export type Item = {
+  id?: number;
   name: string;
   quantity: number;
   rate: number;
@@ -30,10 +33,12 @@ const itemSchema = z.object({
 });
 
 export const invoiceSchema = z.object({
+  id: z.number().optional(),
   guestName: z.string().trim().min(1, "Guest name is required"),
   invoiceDate: z.date(),
   checkinDate: z.date(),
   checkoutDate: z.date(),
+  homestayId: z.string().optional(),
   accomodation: z.array(itemSchema),
   food: z.object({
     breakfast: z.array(itemSchema),

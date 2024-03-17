@@ -6,14 +6,19 @@ import {
 	CardFooter,
 	CardHeader,
 } from "@/components/ui/card";
-import { getAllInvoices } from "@/data/admin/invoice-dto";
+import { deleteInvoice, getAllInvoices } from "@/data/admin/invoice-dto";
 import { PlusIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import DeleteButton from "./components/DeleteButton";
 
 export default async function Invoice({
 	params,
 }: { params: { homestay: string } }) {
 	const invoices = await getAllInvoices(params.homestay);
+	const onDeleteInvoice = async (id: number) => {
+		"use server";
+		await deleteInvoice(id);
+	};
 	return (
 		<>
 			<NavBar>Invoices</NavBar>
@@ -49,7 +54,10 @@ export default async function Invoice({
 								</CardContent>
 								<CardFooter className="flex flex-col items-center justify-end w-full gap-2">
 									<div className="flex items-center justify-between w-full gap-2">
-										<Link href={`invoice/${invoice.id}`} className="w-full">
+										<Link
+											href={`invoice/${invoice.id}/edit`}
+											className="w-full"
+										>
 											<Button
 												variant="accent"
 												className="w-full hover:text-primary-foreground"
@@ -57,12 +65,10 @@ export default async function Invoice({
 												Edit
 											</Button>
 										</Link>
-										<Button
-											variant="destructive"
-											className="hover:bg-destructive/80 hover:text-primary-foreground"
-										>
-											Delete
-										</Button>
+										<DeleteButton
+											invoiceId={invoice.id}
+											deleteInvoice={onDeleteInvoice}
+										/>
 									</div>
 									<Link href={`invoice/${invoice.id}`} className="w-full">
 										<Button

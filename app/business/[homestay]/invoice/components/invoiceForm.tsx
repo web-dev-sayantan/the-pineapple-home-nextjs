@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { useFieldArray, useForm } from "react-hook-form";
-import { invoiceSchema } from "../shared/shared-code";
+import { Invoice, invoiceSchema } from "../shared/shared-code";
 import {
 	Form,
 	FormControl,
@@ -28,32 +28,43 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
+import Link from "next/link";
 
-export default function InvoiceForm({ homestayId }: { homestayId: string }) {
-	const [state, formAction] = useFormState(generateInvoice, {
-		success: false,
-	});
+const defaultValues = {
+	guestName: "",
+	invoiceDate: new Date(),
+	checkinDate: subDays(new Date(), 2),
+	checkoutDate: new Date(),
+	accomodation: [
+		{
+			name: "Room 101",
+			quantity: 2,
+			rate: 1500,
+		},
+	],
+	food: {
+		breakfast: [],
+		lunch: [],
+		dinner: [],
+		snacks: [],
+	},
+	amenities: [],
+};
+
+export default function InvoiceForm({
+	homestayId,
+	invoice,
+}: { homestayId: string; invoice?: Invoice }) {
+	const [state, formAction] = useFormState(
+		generateInvoice.bind(null, invoice ? "update" : "create"),
+		{
+			success: false,
+		},
+	);
 	const form = useForm<z.infer<typeof invoiceSchema>>({
 		resolver: zodResolver(invoiceSchema),
 		defaultValues: {
-			guestName: "",
-			invoiceDate: new Date(),
-			checkinDate: subDays(new Date(), 2),
-			checkoutDate: new Date(),
-			accomodation: [
-				{
-					name: "Room 101",
-					quantity: 2,
-					rate: 1500,
-				},
-			],
-			food: {
-				breakfast: [],
-				lunch: [],
-				dinner: [],
-				snacks: [],
-			},
-			amenities: [],
+			...(invoice ? invoice : defaultValues),
 			...(state?.fields ?? {}),
 		},
 	});
@@ -86,35 +97,16 @@ export default function InvoiceForm({ homestayId }: { homestayId: string }) {
 	const formRef = useRef<HTMLFormElement>(null);
 	return (
 		<Form {...form}>
-			{state.success && (
-				<div className="flex flex-col w-full">{state.message}</div>
-			)}
-			{state?.issues && (
-				<div className="text-red-500">
-					<ul>
-						{state.issues.map((issue, index) => (
-							<li
-								key={`${issue}_${
-									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-									index
-								}`}
-								className="flex gap-1"
-							>
-								<X fill="red" />
-								{issue}
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
 			<form
 				action={formAction}
 				ref={formRef}
 				onSubmit={(event) => {
-					console.log("submitted");
 					event.preventDefault();
 					form.handleSubmit(() => {
 						const formData = new FormData();
+						if (invoice?.id) {
+							formData.append("id", `${invoice.id}`);
+						}
 						formData.append("guestName", form.getValues("guestName"));
 						formData.append(
 							"invoiceDate",
@@ -353,13 +345,44 @@ export default function InvoiceForm({ homestayId }: { homestayId: string }) {
 							Next
 						</button>
 					</div>
-					<SubmitButton />
+					<SubmitButton action={invoice ? "update" : "create"} />
 				</div>
 			</form>
+			{state.success && (
+				<div className="flex flex-col items-center w-full py-4 text-sm">
+					<span>
+						{state.message}. &nbsp;
+						<Link
+							href={`/business/${homestayId}/invoice/${invoice?.id}`}
+							className="w-full underline text-accent underline-offset-4"
+						>
+							View
+						</Link>
+					</span>
+				</div>
+			)}
+			{state?.issues && (
+				<div className="text-red-500">
+					<ul>
+						{state.issues.map((issue, index) => (
+							<li
+								key={`${issue}_${
+									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+									index
+								}`}
+								className="flex gap-1"
+							>
+								<X fill="red" />
+								{issue}
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
 		</Form>
 	);
 }
-function SubmitButton() {
+function SubmitButton({ action }: { action: "create" | "update" }) {
 	const { pending } = useFormStatus();
 	return (
 		<Button
@@ -367,7 +390,9 @@ function SubmitButton() {
 			className="px-4 py-1 text-lg font-semibold rounded-md bg-primary text-primary-foreground"
 			aria-disabled={pending}
 		>
-			{pending ? "Generating Invoice..." : "Generate Invoice"}
+			{pending
+				? `${action === "create" ? "Generating" : "Updating"} Invoice...`
+				: `${action === "create" ? "Generate" : "Update"}  Invoice`}
 		</Button>
 	);
 }

@@ -1,8 +1,10 @@
+import { Button } from "@/components/ui/button";
 import PrintButton from "../components/PrintButton";
 import NavBar from "@/app/components/navBar";
 import { getInvoiceById } from "@/data/admin/invoice-dto";
 import { getHomestayById } from "@/data/homestay-dto";
 import { FoodTypesEnum } from "@/drizzle/schema";
+import Link from "next/link";
 
 export default async function Invoice({
 	params,
@@ -33,16 +35,8 @@ export default async function Invoice({
 					<div className="flex flex-col items-center justify-between md:flex-row">
 						<div className="flex flex-col w-full gap-3 md:gap-2">
 							<h1 className="flex items-center justify-center mb-8 text-xl font-bold underline capitalize underline-offset-2 md:no-underline md:mb-0 text-primary md:font-normal md:justify-start md:text-3xl">
-								{homestay?.name}
+								{homestay?.name}, {homestay?.locationName}
 							</h1>
-							<h2 className="flex items-center w-full gap-2 md:justify-start md:text-lg">
-								<span className="font-bold min-w-[5rem] md:min-w-[1rem]">
-									UPI:
-								</span>
-								<span className="md:text-lg text-primary">
-									8017523017, 6290853406
-								</span>
-							</h2>
 						</div>
 						<div className="flex flex-col w-full md:w-auto">
 							<h2 className="flex gap-2 text-md">
@@ -60,6 +54,17 @@ export default async function Invoice({
 								<span className="text-primary">{data.guestName}</span>
 							</h2>
 							<PrintButton />
+							<Link
+								href={`${params.invoiceId}/edit`}
+								className="w-full print:hidden"
+							>
+								<Button
+									variant="accent"
+									className="w-full hover:text-primary-foreground"
+								>
+									Edit
+								</Button>
+							</Link>
 						</div>
 					</div>
 					<h1 className="hidden mt-20 text-lg font-semibold text-center md:block">
@@ -82,7 +87,7 @@ export default async function Invoice({
 						</h1>
 						<div className="flex flex-col w-full py-2">
 							{data.accomodation.map((item) => (
-								<div className="flex items-center w-full px-4">
+								<div className="flex items-center w-full px-4" key={item.id}>
 									<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
 										{item.name}
 									</div>
@@ -222,7 +227,10 @@ export default async function Invoice({
 								</h1>
 								<div className="flex flex-col w-full">
 									{data.amenities.map((item) => (
-										<div className="flex items-center w-full px-4">
+										<div
+											className="flex items-center w-full px-4"
+											key={item.id}
+										>
 											<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
 												{item.name}
 											</div>
@@ -260,6 +268,15 @@ export default async function Invoice({
 									)}
 								&nbsp;/-
 							</div>
+						</div>
+						<div className="flex flex-col items-center w-full gap-2 p-2 rounded-md bg-primary/10 md:justify-start md:text-lg">
+							<span className="font-bold text-nowrap">UPI Numbers:</span>
+							<span className="md:text-lg text-primary text-wrap">
+								8017523017 (Sudipta)
+							</span>
+							<span className="md:text-lg text-primary text-wrap">
+								6290853406 (Sayantan)
+							</span>
 						</div>
 					</div>
 				</div>
