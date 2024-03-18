@@ -1,90 +1,32 @@
 import NavBar from "@/app/components/navBar";
-import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-} from "@/components/ui/card";
-import { deleteInvoice, getAllInvoices } from "@/data/admin/invoice-dto";
+import { Card, CardContent } from "@/components/ui/card";
+import { getAllInvoices } from "@/data/admin/invoice-dto";
 import { PlusIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import DeleteButton from "./components/DeleteButton";
+import InvoiceCard from "@/app/business/[homestay]/invoices/components/InvoiceCard";
 
 export default async function Invoice({
 	params,
 }: { params: { homestay: string } }) {
 	const invoices = await getAllInvoices(params.homestay);
-	const onDeleteInvoice = async (id: number) => {
-		"use server";
-		await deleteInvoice(id);
-	};
 	return (
 		<>
 			<NavBar>Invoices</NavBar>
 			{invoices?.length ? (
 				<div className="grid w-full grid-cols-1 gap-4 p-8 md:grid-cols-3">
-					<>
-						<Card className="flex flex-col justify-between">
-							<Link
-								href="invoices/generate"
-								className="w-full h-full font-bold"
-							>
-								<CardContent className="flex flex-col items-center justify-center h-full gap-1 pt-6">
-									<div className="flex items-center justify-center w-full gap-1 px-4 py-2 text-accent-foreground/70">
-										<PlusIcon width={20} height={20} className="font-bold " />{" "}
-										New Invoice
-									</div>
-								</CardContent>
-							</Link>
-						</Card>
-						{invoices.map((invoice) => (
-							<Card className="flex flex-col justify-between" key={invoice.id}>
-								<CardHeader className="w-full text-center">
-									<h2 className="font-bold text-md">Invoice {invoice.id}</h2>
-								</CardHeader>
-								<CardContent className="flex flex-col gap-1">
-									<div className="flex items-center gap-2 text-md">
-										<span className="font-bold">Guest Name: </span>
-										<span>{invoice.guestName}</span>
-									</div>
-									<div className="flex items-center gap-2 text-md">
-										<span className="font-bold">Date: </span>
-										<span className="">
-											{invoice.invoiceDate.toDateString()}
-										</span>
-									</div>
-								</CardContent>
-								<CardFooter className="flex flex-col items-center justify-end w-full gap-2">
-									<div className="flex items-center justify-between w-full gap-2">
-										<Link
-											href={`invoices/${invoice.id}/edit`}
-											className="w-full"
-										>
-											<Button
-												variant="accent"
-												className="w-full hover:text-primary-foreground"
-											>
-												Edit
-											</Button>
-										</Link>
-										<DeleteButton
-											invoiceId={invoice.id}
-											deleteInvoice={onDeleteInvoice}
-										/>
-									</div>
-									<Link href={`invoices/${invoice.id}`} className="w-full">
-										<Button
-											variant="default"
-											className="w-full hover:bg-primary/80 hover:text-primary-foreground"
-										>
-											View Invoice
-										</Button>
-									</Link>
-								</CardFooter>
-							</Card>
-						))}
-					</>
+					<Card className="flex flex-col justify-between">
+						<Link href="invoices/generate" className="w-full h-full font-bold">
+							<CardContent className="flex flex-col items-center justify-center h-full gap-1 pt-6">
+								<div className="flex items-center justify-center w-full gap-1 px-4 py-2 text-accent-foreground/70">
+									<PlusIcon width={20} height={20} className="font-bold " /> New
+									Invoice
+								</div>
+							</CardContent>
+						</Link>
+					</Card>
+					{invoices.map((invoice) => (
+						<InvoiceCard key={invoice.id} invoice={invoice} />
+					))}
 				</div>
 			) : (
 				<div className="flex md:items-center justify-center w-full h-[calc(100%-6rem)] p-4">

@@ -15,7 +15,10 @@ import { useState } from "react";
 export default function DeleteButton({
 	invoiceId,
 	deleteInvoice,
-}: { invoiceId: number; deleteInvoice: (id: number) => Promise<void> }) {
+}: {
+	invoiceId: number;
+	deleteInvoice: (id: number) => Promise<number | null>;
+}) {
 	const [open, setOpen] = useState(false);
 	return (
 		<>

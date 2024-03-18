@@ -12,15 +12,14 @@ import {
 } from "@/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 
-export async function getAllInvoices(homestayId: string) {
+export const getAllInvoices = async (homestayId: string) => {
   return await db.query.invoice.findMany({
     where: and(
       eq(invoice.homestayId, homestayId),
       eq(invoice.isDeleted, false)
     ),
   });
-}
-
+};
 export async function getInvoiceById(invoiceId: number, homestayId: string) {
   try {
     return await db.query.invoice.findFirst({

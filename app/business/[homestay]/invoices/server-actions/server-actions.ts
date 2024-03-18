@@ -2,7 +2,11 @@
 
 import { z } from "zod";
 import { Invoice, invoiceSchema } from "../shared/shared-code";
-import { createInvoice, updateInvoice } from "@/data/admin/invoice-dto";
+import {
+  createInvoice,
+  deleteInvoice,
+  updateInvoice,
+} from "@/data/admin/invoice-dto";
 export type InvoiceFormState = {
   success: boolean;
   error?: z.ZodError<z.infer<typeof invoiceSchema>>;
@@ -95,4 +99,9 @@ export async function generateInvoice(
       action === "create" ? "generated" : "updated"
     } successfully`,
   };
+}
+
+export async function deleteInvoiceAction(invoiceId: number) {
+  const deleted = await deleteInvoice(invoiceId);
+  return deleted.length > 0 ? deleted[0].id : null;
 }
