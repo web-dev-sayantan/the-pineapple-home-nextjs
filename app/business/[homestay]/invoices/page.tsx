@@ -5,7 +5,7 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import InvoiceCard from "@/app/business/[homestay]/invoices/components/InvoiceCard";
 
-export default async function Invoice({
+export default async function Invoices({
 	params,
 }: { params: { homestay: string } }) {
 	const invoices = await getAllInvoices(params.homestay);

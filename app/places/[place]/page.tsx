@@ -3,6 +3,7 @@ import { db } from "../../../drizzle";
 import { homestay } from "../../../drizzle/schema";
 import NavBar from "../../components/navBar";
 import HomestayCard from "./components/homestayCard";
+import { getAllHomestaysByLocation } from "@/data/homestay-dto";
 
 export default async function Place({
 	params,
@@ -11,21 +12,7 @@ export default async function Place({
 	params: { place: string };
 	searchParams: { id: string };
 }) {
-	const homestays = await db.query.homestay.findMany({
-		where: eq(homestay.locationName, params.place),
-		columns: {
-			id: true,
-			name: true,
-		},
-		with: {
-			homestayGallery: {
-				columns: {
-					url: true,
-					category: true,
-				},
-			},
-		},
-	});
+	const homestays = await getAllHomestaysByLocation(params.place);
 	return (
 		<div className="flex flex-col items-center justify-center w-full">
 			<NavBar>

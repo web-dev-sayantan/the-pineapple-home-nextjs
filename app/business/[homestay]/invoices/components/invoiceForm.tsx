@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -85,13 +85,10 @@ export default function InvoiceForm({
 		name: "amenities",
 	});
 	const [pageNo, setPageNo] = useState(1);
-
-	const formRef = useRef<HTMLFormElement>(null);
 	return (
 		<Form {...form}>
 			<form
 				action={formAction}
-				ref={formRef}
 				onSubmit={(event) => {
 					event.preventDefault();
 					form.handleSubmit(() => {
@@ -347,14 +344,17 @@ export default function InvoiceForm({
 function SubmitButton({ action }: { action: "create" | "update" }) {
 	const { pending } = useFormStatus();
 	return (
-		<Button
-			type="submit"
-			className="px-4 py-1 text-lg font-semibold rounded-md bg-primary text-primary-foreground"
-			aria-disabled={pending}
-		>
-			{pending
-				? `${action === "create" ? "Generating" : "Updating"} Invoice...`
-				: `${action === "create" ? "Generate" : "Update"}  Invoice`}
-		</Button>
+		<>
+			<Button
+				type="submit"
+				aria-disabled={pending}
+				className="px-4 py-1 text-lg font-semibold rounded-md bg-primary text-primary-foreground"
+			>
+				{pending
+					? `${action === "create" ? "Generating" : "Updating"} Invoice...`
+					: `${action === "create" ? "Generate" : "Update"}  Invoice`}
+			</Button>
+			<div>{pending ? "Please wait..." : ""}</div>
+		</>
 	);
 }
