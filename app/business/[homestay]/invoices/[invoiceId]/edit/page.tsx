@@ -1,5 +1,5 @@
-import InvoiceForm from "@/app/business/[homestay]/invoice/components/invoiceForm";
-import { Invoice } from "@/app/business/[homestay]/invoice/shared/shared-code";
+import InvoiceForm from "@/app/business/[homestay]/invoices/components/invoiceForm";
+import { Invoice } from "@/app/business/[homestay]/invoices/shared/shared-code";
 import NavBar from "@/app/components/navBar";
 import { Card } from "@/components/ui/card";
 import { getInvoiceById } from "@/data/admin/invoice-dto";

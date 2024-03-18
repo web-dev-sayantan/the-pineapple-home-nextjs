@@ -12,22 +12,14 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { DateFieldsType, DatePicker } from "../components/datePicker";
-import FormPage from "@/app/business/[homestay]/invoice/components/formPage";
-import { format, subDays } from "date-fns";
+import { DateFieldsType, DatePicker } from "./datePicker";
+import FormPage from "@/app/business/[homestay]/invoices/components/formPage";
+import { subDays } from "date-fns";
 import { generateInvoice } from "../server-actions/server-actions";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@/lib/utils";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { Calendar } from "@/components/ui/calendar";
 import Link from "next/link";
 
 const defaultValues = {
@@ -317,9 +309,13 @@ export default function InvoiceForm({
 			{state.success && (
 				<div className="flex flex-col items-center w-full py-4 text-sm">
 					<span>
-						{state.message}. &nbsp;
+						{state.message}.&nbsp;
 						<Link
-							href={`/business/${homestayId}/invoice/${invoice?.id}`}
+							href={
+								invoice
+									? `/business/${homestayId}/invoices/${invoice.id}`
+									: `/business/${homestayId}/invoices/${state.fields?.id}`
+							}
 							className="w-full underline text-accent underline-offset-4"
 						>
 							View

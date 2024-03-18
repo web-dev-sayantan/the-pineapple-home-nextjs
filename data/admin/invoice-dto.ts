@@ -1,7 +1,7 @@
 import {
   Invoice,
   Item,
-} from "@/app/business/[homestay]/invoice/shared/shared-code";
+} from "@/app/business/[homestay]/invoices/shared/shared-code";
 import { db } from "@/drizzle";
 import {
   FoodTypesEnum,

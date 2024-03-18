@@ -91,6 +91,8 @@ export async function generateInvoice(
       id: result ? result[0].id.toString() : "",
     },
     success: true,
-    message: "Invoice generated successfully",
+    message: `Invoice ${result ? result[0].id.toString() : ""} ${
+      action === "create" ? "generated" : "updated"
+    } successfully`,
   };
 }
