@@ -7,6 +7,7 @@ import {
   deleteInvoice,
   updateInvoice,
 } from "@/data/admin/invoice-dto";
+import { revalidatePath } from "next/cache";
 export type InvoiceFormState = {
   success: boolean;
   error?: z.ZodError<z.infer<typeof invoiceSchema>>;
@@ -103,5 +104,8 @@ export async function generateInvoice(
 
 export async function deleteInvoiceAction(invoiceId: number) {
   const deleted = await deleteInvoice(invoiceId);
+  if (deleted.length) {
+    revalidatePath(`/business/${deleted[0].homestayId}/invoices`);
+  }
   return deleted.length > 0 ? deleted[0].id : null;
 }

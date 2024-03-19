@@ -1,5 +1,5 @@
-import DeleteButton from "@/app/business/[homestay]/invoices/components/DeleteButton";
-import { deleteInvoiceAction } from "@/app/business/[homestay]/invoices/server-actions/server-actions";
+import DeleteButton from "./DeleteButton";
+import { deleteInvoiceAction } from "../server-actions/server-actions";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -7,7 +7,6 @@ import {
 	CardFooter,
 	CardHeader,
 } from "@/components/ui/card";
-import { deleteInvoice } from "@/data/admin/invoice-dto";
 import Link from "next/link";
 
 export type InvoiceCardProps = {
