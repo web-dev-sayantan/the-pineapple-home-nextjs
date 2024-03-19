@@ -91,6 +91,7 @@ export async function generateInvoice(
     action === "create"
       ? await createInvoice(parsedFormData.data, rawFormData.homestayId)
       : await updateInvoice(parsedFormData.data);
+  revalidatePath(`/business/${rawFormData.homestayId}/invoices`);
   return {
     fields: {
       id: result ? result[0].id.toString() : "",
