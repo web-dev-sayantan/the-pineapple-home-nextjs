@@ -86,7 +86,8 @@ export default function InvoiceForm({
 	});
 	const [pageNo, setPageNo] = useState(1);
 
-	const prepareFormDataAndSubmit = () => {
+	const handleFormAction = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		const formData = new FormData();
 		if (invoice?.id) {
 			formData.append("id", `${invoice.id}`);
@@ -111,10 +112,6 @@ export default function InvoiceForm({
 		);
 		formData.append("amenities", JSON.stringify(form.getValues("amenities")));
 		formAction(formData);
-	};
-
-	const handleFormAction = (event: FormEvent<HTMLFormElement>) => {
-		form.handleSubmit(prepareFormDataAndSubmit)(event);
 	};
 	return (
 		<Form {...form}>
