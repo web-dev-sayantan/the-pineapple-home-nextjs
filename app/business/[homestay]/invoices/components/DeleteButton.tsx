@@ -38,9 +38,13 @@ export default function DeleteButton({
 						invoice.
 					</DialogDescription>
 				</DialogHeader>
-				<DialogFooter className="justify-end">
+				<DialogFooter className="justify-end gap-2">
 					<DialogClose asChild>
-						<Button type="button" variant="secondary">
+						<Button
+							type="button"
+							variant="outline"
+							className="text-destructive hover:bg-primary/80 hover:text-primary-foreground"
+						>
 							Cancel
 						</Button>
 					</DialogClose>

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -85,53 +85,40 @@ export default function InvoiceForm({
 		name: "amenities",
 	});
 	const [pageNo, setPageNo] = useState(1);
+
+	const prepareFormDataAndSubmit = () => {
+		const formData = new FormData();
+		if (invoice?.id) {
+			formData.append("id", `${invoice.id}`);
+		}
+		formData.append("guestName", form.getValues("guestName"));
+		formData.append("invoiceDate", form.getValues("invoiceDate").toString());
+		formData.append("checkinDate", form.getValues("checkinDate").toString());
+		formData.append("checkoutDate", form.getValues("checkoutDate").toString());
+		formData.append("homestayId", homestayId);
+		formData.append(
+			"accomodation",
+			JSON.stringify(form.getValues("accomodation")),
+		);
+		formData.append(
+			"food",
+			JSON.stringify({
+				breakfast: form.getValues("food.breakfast"),
+				lunch: form.getValues("food.lunch"),
+				dinner: form.getValues("food.dinner"),
+				snacks: form.getValues("food.snacks"),
+			}),
+		);
+		formData.append("amenities", JSON.stringify(form.getValues("amenities")));
+		formAction(formData);
+	};
+
+	const handleFormAction = (event: FormEvent<HTMLFormElement>) => {
+		form.handleSubmit(prepareFormDataAndSubmit)(event);
+	};
 	return (
 		<Form {...form}>
-			<form
-				action={formAction}
-				onSubmit={(event) => {
-					event.preventDefault();
-					form.handleSubmit(() => {
-						const formData = new FormData();
-						if (invoice?.id) {
-							formData.append("id", `${invoice.id}`);
-						}
-						formData.append("guestName", form.getValues("guestName"));
-						formData.append(
-							"invoiceDate",
-							form.getValues("invoiceDate").toString(),
-						);
-						formData.append(
-							"checkinDate",
-							form.getValues("checkinDate").toString(),
-						);
-						formData.append(
-							"checkoutDate",
-							form.getValues("checkoutDate").toString(),
-						);
-						formData.append("homestayId", homestayId);
-						formData.append(
-							"accomodation",
-							JSON.stringify(form.getValues("accomodation")),
-						);
-						formData.append(
-							"food",
-							JSON.stringify({
-								breakfast: form.getValues("food.breakfast"),
-								lunch: form.getValues("food.lunch"),
-								dinner: form.getValues("food.dinner"),
-								snacks: form.getValues("food.snacks"),
-							}),
-						);
-						formData.append(
-							"amenities",
-							JSON.stringify(form.getValues("amenities")),
-						);
-						formAction(formData);
-					})(event);
-				}}
-				className="flex flex-col w-full gap-8"
-			>
+			<form onSubmit={handleFormAction} className="flex flex-col w-full gap-8">
 				{/* Basic Details */}
 				{pageNo === 1 && (
 					<>
