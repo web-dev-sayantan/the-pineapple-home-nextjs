@@ -45,9 +45,7 @@ export default async function EditPage({
 			{invoice ? (
 				<div className="container flex flex-col items-center">
 					<div className="flex flex-col items-center w-full md:w-[30rem] gap-4 py-8 md:px-8">
-						<Card className="w-full p-4 md:p-8 bg-white/40">
-							<InvoiceForm homestayId={params.homestay} invoice={invoice} />
-						</Card>
+						<InvoiceForm homestayId={params.homestay} invoice={invoice} />
 					</div>
 				</div>
 			) : null}
