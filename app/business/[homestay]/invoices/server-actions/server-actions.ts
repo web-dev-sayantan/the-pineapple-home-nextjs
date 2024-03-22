@@ -26,7 +26,10 @@ export async function generateInvoice(
     rawFormData.id = +rawFormData.id;
   }
   rawFormData.invoiceDate = new Date(rawFormData.invoiceDate as string);
-  rawFormData.checkinDate = new Date(rawFormData.checkinDate as string);
+  rawFormData.stayDuration = {
+    from: new Date(rawFormData.checkinDate as string),
+    to: new Date(rawFormData.checkoutDate as string),
+  };
   rawFormData.checkoutDate = new Date(rawFormData.checkoutDate as string);
   rawFormData.accomodation = JSON.parse(rawFormData.accomodation as string);
   rawFormData.food = JSON.parse(rawFormData.food as string);

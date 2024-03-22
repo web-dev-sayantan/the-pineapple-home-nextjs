@@ -50,27 +50,47 @@ export default async function Invoice({
 								</span>
 							</h2>
 							<h2 className="flex items-center gap-2 text-md md:hidden">
+								<span className="font-bold min-w-[5rem]">Stay:</span>
+								<span className=" text-primary text-nowrap">
+									{data.checkinDate.toDateString()} -{" "}
+									{data.checkoutDate.toDateString()}
+								</span>
+							</h2>
+							<h2 className="flex items-center gap-2 text-md md:hidden">
 								<span className="font-bold min-w-[5rem]">Guest:</span>
 								<span className="text-primary">{data.guestName}</span>
 							</h2>
-							<PrintButton />
-							<Link
-								href={`${params.invoiceId}/edit`}
-								className="w-full print:hidden"
-							>
-								<Button
-									variant="accent"
-									className="w-full hover:text-primary-foreground"
-								>
-									Edit
-								</Button>
-							</Link>
+							<div className="flex items-center gap-2">
+								<div className="basis-1/3">
+									<Link
+										href={`${params.invoiceId}/edit`}
+										className="min-w-[10rem] print:hidden"
+									>
+										<Button
+											variant="accent"
+											className="w-full hover:text-primary-foreground"
+										>
+											Edit
+										</Button>
+									</Link>
+								</div>
+								<PrintButton />
+							</div>
 						</div>
 					</div>
-					<h1 className="hidden mt-20 text-lg font-semibold text-center md:block">
-						Guest Name:{" "}
-						<span className="font-normal text-primary">{data.guestName}</span>
-					</h1>
+					<div className="hidden mt-20 font-bold md:block">
+						<div>
+							Guest Name:{" "}
+							<span className="font-normal text-primary">{data.guestName}</span>
+						</div>
+						<div className="text-sm font-bold">
+							Stay:{" "}
+							<span className="text-sm font-normal text-primary">
+								{data.checkinDate.toDateString()} -{" "}
+								{data.checkoutDate.toDateString()}
+							</span>
+						</div>
+					</div>
 					<div className="flex flex-col items-center w-full my-2 text-sm">
 						<div className="flex items-center w-full px-2 py-1 rounded-md bg-primary/90 text-primary-foreground">
 							<h1 className="font-bold md:text-xl basis-1/3 md:basis-1/2">

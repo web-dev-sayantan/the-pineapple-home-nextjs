@@ -4,8 +4,10 @@ export type Invoice = {
   id?: number;
   guestName: string;
   invoiceDate: Date;
-  checkinDate: Date;
-  checkoutDate: Date;
+  stayDuration: {
+    from: Date;
+    to: Date;
+  };
   homestayId?: string;
   accomodation: Item[];
   food: Food;
@@ -36,8 +38,7 @@ export const invoiceSchema = z.object({
   id: z.number().optional(),
   guestName: z.string().trim().min(1, "Guest name is required"),
   invoiceDate: z.date(),
-  checkinDate: z.date(),
-  checkoutDate: z.date(),
+  stayDuration: z.object({ from: z.date(), to: z.date() }),
   homestayId: z.string().optional(),
   accomodation: z.array(itemSchema),
   food: z.object({

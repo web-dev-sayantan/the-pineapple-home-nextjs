@@ -1,22 +1,38 @@
-import InvoiceForm from "@/app/business/[homestay]/invoices/components/invoiceForm";
-import { Invoice } from "@/app/business/[homestay]/invoices/shared/shared-code";
+import InvoiceForm from "../../components/invoiceForm";
+import { Invoice } from "../../shared/shared-code";
 import NavBar from "@/app/components/navBar";
-import { Card } from "@/components/ui/card";
-import { getInvoiceById } from "@/data/admin/invoice-dto";
+import {
+	getAmenities,
+	getBreakfastItems,
+	getDinnerItems,
+	getInvoiceById,
+	getLunchItems,
+	getSnacksItems,
+} from "@/data/admin/invoice-dto";
 import { FoodTypesEnum } from "@/drizzle/schema";
 
 export default async function EditPage({
 	params,
 }: { params: { invoiceId: string; homestay: string } }) {
-	const invoiceData = await getInvoiceById(+params.invoiceId, params.homestay);
+	const [invoiceData, breakfast, lunch, dinner, snacks, amenities] =
+		await Promise.all([
+			getInvoiceById(+params.invoiceId, params.homestay),
+			getBreakfastItems(),
+			getLunchItems(),
+			getDinnerItems(),
+			getSnacksItems(),
+			getAmenities(),
+		]);
 	let invoice: Invoice | null = null;
 	if (invoiceData) {
 		invoice = {
 			id: invoiceData.id,
 			guestName: invoiceData.guestName,
 			invoiceDate: invoiceData.invoiceDate,
-			checkinDate: invoiceData.checkinDate,
-			checkoutDate: invoiceData.checkoutDate,
+			stayDuration: {
+				from: invoiceData.checkinDate,
+				to: invoiceData.checkoutDate,
+			},
 			accomodation: invoiceData.accomodation,
 			food: {
 				breakfast: [],
@@ -45,7 +61,17 @@ export default async function EditPage({
 			{invoice ? (
 				<div className="container flex flex-col items-center">
 					<div className="flex flex-col items-center w-full md:w-[30rem] gap-4 py-8 md:px-8">
-						<InvoiceForm homestayId={params.homestay} invoice={invoice} />
+						<InvoiceForm
+							homestayId={params.homestay}
+							invoice={invoice}
+							autocompleteItems={{
+								breakfast,
+								lunch,
+								dinner,
+								snacks,
+								amenities,
+							}}
+						/>
 					</div>
 				</div>
 			) : null}

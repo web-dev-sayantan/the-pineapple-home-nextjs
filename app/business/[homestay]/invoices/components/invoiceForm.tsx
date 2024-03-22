@@ -1,8 +1,8 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useFieldArray, useForm } from "react-hook-form";
-import { subDays } from "date-fns";
+import { differenceInCalendarDays, subDays } from "date-fns";
 import { z } from "zod";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -18,17 +18,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Invoice, invoiceSchema } from "../shared/shared-code";
-import { DateFieldsType, DatePicker } from "./datePicker";
+import { DateFieldsType, DatePicker, DateRangePicker } from "./datePicker";
 import FormPage from "./formPage";
 import { generateInvoice } from "../server-actions/server-actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
+import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 
 const defaultValues = {
 	guestName: "",
 	invoiceDate: new Date(),
-	checkinDate: subDays(new Date(), 2),
-	checkoutDate: new Date(),
+	stayDuration: {
+		from: subDays(new Date(), 2),
+		to: new Date(),
+	},
 	accomodation: [
 		{
 			name: "Room 101",
@@ -45,10 +48,23 @@ const defaultValues = {
 	amenities: [],
 };
 
+export type AutocompleteItemsType = {
+	breakfast: { name: string; rate: number }[];
+	lunch: { name: string; rate: number }[];
+	dinner: { name: string; rate: number }[];
+	snacks: { name: string; rate: number }[];
+	amenities: { name: string; rate: number }[];
+};
+
 export default function InvoiceForm({
 	homestayId,
 	invoice,
-}: { homestayId: string; invoice?: Invoice }) {
+	autocompleteItems,
+}: {
+	homestayId: string;
+	invoice?: Invoice;
+	autocompleteItems: AutocompleteItemsType;
+}) {
 	const [state, formAction] = useFormState(
 		generateInvoice.bind(null, invoice ? "update" : "create"),
 		{
@@ -88,6 +104,15 @@ export default function InvoiceForm({
 	});
 	const [pageNo, setPageNo] = useState(1);
 
+	const labels = [
+		"Basic Details",
+		"Accomodation",
+		"Breakfast",
+		"Lunch",
+		"Dinner",
+		"Snacks",
+		"Amenities",
+	];
 	const handleFormAction = (data: FormData) => {
 		const formData = new FormData();
 		if (invoice?.id) {
@@ -95,8 +120,14 @@ export default function InvoiceForm({
 		}
 		formData.append("guestName", form.getValues("guestName"));
 		formData.append("invoiceDate", form.getValues("invoiceDate").toString());
-		formData.append("checkinDate", form.getValues("checkinDate").toString());
-		formData.append("checkoutDate", form.getValues("checkoutDate").toString());
+		formData.append(
+			"checkinDate",
+			form.getValues("stayDuration.from").toString(),
+		);
+		formData.append(
+			"checkoutDate",
+			form.getValues("stayDuration.to").toString(),
+		);
 		formData.append("homestayId", homestayId);
 		formData.append(
 			"accomodation",
@@ -119,6 +150,44 @@ export default function InvoiceForm({
 			<Form {...form}>
 				<form action={handleFormAction} className="flex flex-col w-full gap-8">
 					{/* Basic Details */}
+					<div className="flex items-center w-full gap-2 my-2">
+						<button
+							type="button"
+							className={cn(
+								"px-4 py-1 text-lg font-semibold rounded-md basis-1/6 bg-destructive text-primary-foreground",
+								{
+									"opacity-60 cursor-not-allowed": pageNo === 1,
+								},
+							)}
+							aria-disabled={pageNo === 1}
+							onClick={() => {
+								pageNo > 1 && setPageNo((prev) => prev - 1);
+							}}
+						>
+							<div className="flex items-center justify-center py-2">
+								<ArrowLeftIcon />
+							</div>
+						</button>
+						<h1 className="text-2xl font-semibold text-center capitalize basis-2/3">
+							{labels[pageNo - 1]}
+						</h1>
+						<button
+							type="button"
+							className={cn(
+								"px-4 py-1 text-lg font-semibold rounded-md basis-1/6 bg-accent text-primary-foreground",
+								{
+									"opacity-60 cursor-not-allowed": pageNo === 7,
+								},
+							)}
+							onClick={() => {
+								pageNo < 7 && setPageNo((next) => next + 1);
+							}}
+						>
+							<div className="flex items-center justify-center py-2">
+								<ArrowRightIcon />
+							</div>
+						</button>
+					</div>
 					{pageNo === 1 && (
 						<>
 							<div className="flex flex-col gap-2">
@@ -143,27 +212,36 @@ export default function InvoiceForm({
 							<div className="flex flex-col gap-2">
 								<FormField
 									control={form.control}
-									name={"invoiceDate" as DateFieldsType}
+									name={"stayDuration"}
 									render={({ field }) => (
-										<DatePicker label="Invoice date" field={field} />
+										<DateRangePicker
+											label="Checkin & Checkout dates:"
+											field={field}
+											onSelected={(dates) => {
+												if (dates.from && dates.to) {
+													form
+														.getValues("accomodation")
+														.forEach((item, index) => {
+															form.setValue(
+																`accomodation.${index}.quantity`,
+																differenceInCalendarDays(
+																	dates.to as Date,
+																	dates.from as Date,
+																),
+															);
+														});
+												}
+											}}
+										/>
 									)}
 								/>
 							</div>
 							<div className="flex flex-col gap-2">
 								<FormField
 									control={form.control}
-									name={"checkinDate" as DateFieldsType}
+									name={"invoiceDate"}
 									render={({ field }) => (
-										<DatePicker label="Checkin date" field={field} />
-									)}
-								/>
-							</div>
-							<div className="flex flex-col gap-2">
-								<FormField
-									control={form.control}
-									name={"checkoutDate" as DateFieldsType}
-									render={({ field }) => (
-										<DatePicker label="Checkout date" field={field} />
+										<DatePicker label="Invoice date:" field={field} />
 									)}
 								/>
 							</div>
@@ -175,11 +253,15 @@ export default function InvoiceForm({
 							type="accomodation"
 							label="Accomodation"
 							items={accomodationList}
+							autoCompleteItems={[]}
 							form={form}
 							onAppend={() =>
 								accomodationList.append({
 									name: "Room 101",
-									quantity: 2,
+									quantity: differenceInCalendarDays(
+										form.getValues("stayDuration.to"),
+										form.getValues("stayDuration.from"),
+									),
 									rate: 1500,
 								})
 							}
@@ -191,6 +273,7 @@ export default function InvoiceForm({
 							type="food.breakfast"
 							label="Breakfast"
 							items={breakfastList}
+							autoCompleteItems={autocompleteItems.breakfast || []}
 							form={form}
 							onAppend={() =>
 								breakfastList.append({
@@ -207,6 +290,7 @@ export default function InvoiceForm({
 							type="food.lunch"
 							label="Lunch"
 							items={lunchList}
+							autoCompleteItems={autocompleteItems.lunch || []}
 							form={form}
 							onAppend={() =>
 								lunchList.append({
@@ -223,6 +307,7 @@ export default function InvoiceForm({
 							type="food.dinner"
 							label="Dinner"
 							items={dinnerList}
+							autoCompleteItems={autocompleteItems.dinner || []}
 							form={form}
 							onAppend={() =>
 								dinnerList.append({
@@ -239,6 +324,7 @@ export default function InvoiceForm({
 							type="food.snacks"
 							label="Snacks"
 							items={snacksList}
+							autoCompleteItems={autocompleteItems.snacks || []}
 							form={form}
 							onAppend={() =>
 								snacksList.append({
@@ -255,6 +341,7 @@ export default function InvoiceForm({
 							type="amenities"
 							label="Amenities"
 							items={amenitiesList}
+							autoCompleteItems={autocompleteItems.amenities || []}
 							form={form}
 							onAppend={() =>
 								amenitiesList.append({
@@ -267,26 +354,6 @@ export default function InvoiceForm({
 					)}
 					{/* Submit */}
 					<div className="flex flex-col gap-4">
-						<div className="flex items-center w-full gap-2 ">
-							<button
-								type="button"
-								className="px-4 py-1 text-lg font-semibold rounded-md basis-1/2 bg-accent text-primary-foreground"
-								onClick={() => {
-									pageNo > 1 && setPageNo((prev) => prev - 1);
-								}}
-							>
-								Back
-							</button>
-							<button
-								type="button"
-								className="px-4 py-1 text-lg font-semibold rounded-md basis-1/2 bg-accent text-primary-foreground"
-								onClick={() => {
-									pageNo < 7 && setPageNo((next) => next + 1);
-								}}
-							>
-								Next
-							</button>
-						</div>
 						<SubmitButton action={invoice ? "update" : "create"} />
 					</div>
 				</form>
@@ -337,7 +404,7 @@ function SubmitButton({ action }: { action: "create" | "update" }) {
 				type="submit"
 				aria-disabled={pending}
 				className={cn(
-					"px-4 py-1 text-lg font-semibold rounded-md bg-primary text-primary-foreground",
+					"px-4 py-2 text-lg font-semibold rounded-md bg-primary text-primary-foreground",
 					pending
 						? "cursor-not-allowed bg-primary/40 hover:bg-primary/40"
 						: "cursor-pointer",

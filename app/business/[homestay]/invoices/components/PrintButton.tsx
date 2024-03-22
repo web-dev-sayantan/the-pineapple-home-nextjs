@@ -6,7 +6,7 @@ export default function PrintButton() {
 	return (
 		<Button
 			onClick={() => window.print()}
-			className="my-2 print:hidden print:py-0"
+			className="w-full my-2 print:hidden print:py-0"
 		>
 			Print
 		</Button>

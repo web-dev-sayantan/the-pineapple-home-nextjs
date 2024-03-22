@@ -64,8 +64,8 @@ export async function createInvoice(invoiceData: Invoice, homestayId: string) {
     .values({
       guestName: invoiceData.guestName,
       invoiceDate: invoiceData.invoiceDate,
-      checkinDate: invoiceData.checkinDate,
-      checkoutDate: invoiceData.checkoutDate,
+      checkinDate: invoiceData.stayDuration.from,
+      checkoutDate: invoiceData.stayDuration.to,
       homestayId,
       isDeleted: false,
     })
@@ -155,8 +155,8 @@ export async function updateInvoice(invoiceData: Invoice) {
       id: invoiceData.id,
       guestName: invoiceData.guestName,
       invoiceDate: invoiceData.invoiceDate,
-      checkinDate: invoiceData.checkinDate,
-      checkoutDate: invoiceData.checkoutDate,
+      checkinDate: invoiceData.stayDuration.from,
+      checkoutDate: invoiceData.stayDuration.to,
       homestayId: invoiceData.homestayId,
       isDeleted: false,
     })
@@ -263,4 +263,53 @@ export async function deleteInvoice(invoiceId: number) {
     .set({ isDeleted: true })
     .where(eq(invoice.id, invoiceId))
     .returning();
+}
+
+export async function getBreakfastItems() {
+  return await db
+    .selectDistinctOn([invoiceFood.name, invoiceFood.rate], {
+      name: invoiceFood.name,
+      rate: invoiceFood.rate,
+    })
+    .from(invoiceFood)
+    .where(eq(invoiceFood.type, FoodTypesEnum.enumValues[0]));
+}
+
+export async function getLunchItems() {
+  return await db
+    .selectDistinctOn([invoiceFood.name, invoiceFood.rate], {
+      name: invoiceFood.name,
+      rate: invoiceFood.rate,
+    })
+    .from(invoiceFood)
+    .where(eq(invoiceFood.type, FoodTypesEnum.enumValues[1]));
+}
+
+export async function getSnacksItems() {
+  return await db
+    .selectDistinctOn([invoiceFood.name, invoiceFood.rate], {
+      name: invoiceFood.name,
+      rate: invoiceFood.rate,
+    })
+    .from(invoiceFood)
+    .where(eq(invoiceFood.type, FoodTypesEnum.enumValues[3]));
+}
+
+export async function getDinnerItems() {
+  return await db
+    .selectDistinctOn([invoiceFood.name, invoiceFood.rate], {
+      name: invoiceFood.name,
+      rate: invoiceFood.rate,
+    })
+    .from(invoiceFood)
+    .where(eq(invoiceFood.type, FoodTypesEnum.enumValues[2]));
+}
+
+export function getAmenities() {
+  return db
+    .selectDistinctOn([invoiceAmenities.name, invoiceAmenities.rate], {
+      name: invoiceAmenities.name,
+      rate: invoiceAmenities.rate,
+    })
+    .from(invoiceAmenities);
 }
