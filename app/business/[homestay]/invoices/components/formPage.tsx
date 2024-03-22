@@ -97,14 +97,13 @@ export default function FormPage({
 																}
 															},
 															onBlur: (e) => {
-																setShowSuggestions(false);
+																console.log(
+																	"Blurred Item name",
+																	showSuggestions,
+																);
+																setShowSuggestions(true);
 															},
 														})}
-														onFocus={(e) => {
-															if (!showSuggestions) {
-																setShowSuggestions(true);
-															}
-														}}
 													/>
 												</PopoverTrigger>
 												<PopoverContent>
