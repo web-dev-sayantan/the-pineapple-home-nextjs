@@ -25,6 +25,14 @@ export default async function Invoice({
 	const snacks = data?.food.filter(
 		(item) => item.type === FoodTypesEnum.enumValues[3],
 	);
+	const total = data
+		? data.accomodation.reduce(
+				(acc, item) => acc + item.rate * item.quantity,
+				0,
+		  ) +
+		  data.food.reduce((acc, item) => acc + item.rate * item.quantity, 0) +
+		  data.amenities.reduce((acc, item) => acc + item.rate * item.quantity, 0)
+		: 0;
 	return (
 		<div className="w-full">
 			<div className="print:hidden">
@@ -185,13 +193,13 @@ export default async function Invoice({
 							) : null
 						}
 						{
-							/* Snacks */
-							snacks?.length ? (
+							/* Dinner */
+							dinner?.length ? (
 								<div className="flex flex-col w-full">
 									<div className="flex px-4 py-1 italic text-secondary-foreground/80">
-										-- Snacks --
+										-- Dinner --
 									</div>
-									{snacks.map((item) => (
+									{dinner.map((item) => (
 										<div key={item.id}>
 											<div className="flex items-center w-full px-4">
 												<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
@@ -213,13 +221,13 @@ export default async function Invoice({
 							) : null
 						}
 						{
-							/* Dinner */
-							dinner?.length ? (
+							/* Snacks */
+							snacks?.length ? (
 								<div className="flex flex-col w-full">
 									<div className="flex px-4 py-1 italic text-secondary-foreground/80">
-										-- Dinner --
+										-- Other Food Items --
 									</div>
-									{dinner.map((item) => (
+									{snacks.map((item) => (
 										<div key={item.id}>
 											<div className="flex items-center w-full px-4">
 												<div className="font-semibold md:text-xl basis-1/3 md:basis-1/2">
@@ -274,21 +282,31 @@ export default async function Invoice({
 							</div>
 							<div className="flex-1 px-2 text-lg font-bold text-right md:text-2xl text-primary">
 								Rs.&nbsp;
-								{data.accomodation.reduce(
-									(acc, item) => acc + item.rate * item.quantity,
-									0,
-								) +
-									data.food.reduce(
-										(acc, item) => acc + item.rate * item.quantity,
-										0,
-									) +
-									data.amenities.reduce(
-										(acc, item) => acc + item.rate * item.quantity,
-										0,
-									)}
+								{total}
 								&nbsp;/-
 							</div>
 						</div>
+						<div className="flex items-center w-full px-2 py-1 mb-4 rounded-md bg-primary/10">
+							<div className="flex font-bold md:text-2xl basis-3/4">
+								Advance paid:
+							</div>
+							<div className="flex-1 px-2 text-lg font-bold text-right md:text-2xl text-accent">
+								Rs.&nbsp;
+								{1400}
+								&nbsp;/-
+							</div>
+						</div>
+						<div className="flex items-center w-full px-2 py-1 mb-4 rounded-md bg-primary/10">
+							<div className="flex font-bold md:text-2xl basis-3/4">
+								Payment Due:
+							</div>
+							<div className="flex-1 px-2 text-lg font-bold text-right md:text-2xl text-destructive">
+								Rs.&nbsp;
+								{total - 1400}
+								&nbsp;/-
+							</div>
+						</div>
+
 						<div className="flex flex-col items-center w-full gap-2 p-2 rounded-md bg-primary/10 md:justify-start md:text-lg">
 							<span className="font-bold text-nowrap">UPI Numbers:</span>
 							<span className="md:text-lg text-primary text-wrap">

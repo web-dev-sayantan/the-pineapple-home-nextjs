@@ -92,18 +92,26 @@ export default function FormPage({
 														{...field}
 														{...form.register(`${type}.${index}.name`, {
 															onChange: (e) => {
-																if (!showSuggestions) {
-																	setShowSuggestions(true);
-																}
+																console.log("Changed Item name");
+																// if (
+																// 	!showSuggestions &&
+																// 	autoCompleteItems.length
+																// ) {
+																// 	setShowSuggestions(true);
+																// }
 															},
-															onBlur: (e) => {
-																console.log(
-																	"Blurred Item name",
-																	showSuggestions,
-																);
-																setShowSuggestions(true);
-															},
+															// onBlur: (e) => {
+															// 	console.log(
+															// 		"Blurred Item name",
+															// 		showSuggestions,
+															// 	);
+															// 	// setShowSuggestions(false);
+															// },
 														})}
+														// onFocus={() => {
+														// 	console.log("Focused Item name");
+														// 	// setShowSuggestions(true);
+														// }}
 													/>
 												</PopoverTrigger>
 												<PopoverContent>
@@ -120,7 +128,7 @@ export default function FormPage({
 														.map((item) => (
 															<div
 																key={item.name}
-																className="w-full p-2 rounded-md cursor-pointer hover:bg-accent hover:text-primary-foreground"
+																className="w-full p-2 rounded-md cursor-pointer hover:bg-accent hover:text-primary-foreground focus:border-red-100"
 																onClick={() => {
 																	form.setValue(
 																		`${type}.${index}.name`,
