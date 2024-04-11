@@ -66,6 +66,7 @@ export async function createInvoice(invoiceData: Invoice, homestayId: string) {
       invoiceDate: invoiceData.invoiceDate,
       checkinDate: invoiceData.stayDuration.from,
       checkoutDate: invoiceData.stayDuration.to,
+      advanceAmount: invoiceData.advanceAmount,
       homestayId,
       isDeleted: false,
     })
@@ -157,6 +158,7 @@ export async function updateInvoice(invoiceData: Invoice) {
       invoiceDate: invoiceData.invoiceDate,
       checkinDate: invoiceData.stayDuration.from,
       checkoutDate: invoiceData.stayDuration.to,
+      advanceAmount: invoiceData.advanceAmount,
       homestayId: invoiceData.homestayId,
       isDeleted: false,
     })

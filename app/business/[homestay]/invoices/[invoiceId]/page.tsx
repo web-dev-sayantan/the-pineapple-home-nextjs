@@ -292,7 +292,7 @@ export default async function Invoice({
 							</div>
 							<div className="flex-1 px-2 text-lg font-bold text-right md:text-2xl text-accent">
 								Rs.&nbsp;
-								{1400}
+								{data.advanceAmount || 0}
 								&nbsp;/-
 							</div>
 						</div>
@@ -302,7 +302,7 @@ export default async function Invoice({
 							</div>
 							<div className="flex-1 px-2 text-lg font-bold text-right md:text-2xl text-destructive">
 								Rs.&nbsp;
-								{total - 1400}
+								{total - (data.advanceAmount ? data.advanceAmount : 0)}
 								&nbsp;/-
 							</div>
 						</div>

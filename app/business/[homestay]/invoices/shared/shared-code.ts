@@ -4,6 +4,7 @@ export type Invoice = {
   id?: number;
   guestName: string;
   invoiceDate: Date;
+  advanceAmount: number;
   stayDuration: {
     from: Date;
     to: Date;
@@ -38,6 +39,7 @@ export const invoiceSchema = z.object({
   id: z.number().optional(),
   guestName: z.string().trim().min(1, "Guest name is required"),
   invoiceDate: z.date(),
+  advanceAmount: z.coerce.number().min(0, "Advance amount cannot be negative"),
   stayDuration: z.object({ from: z.date(), to: z.date() }),
   homestayId: z.string().optional(),
   accomodation: z.array(itemSchema),

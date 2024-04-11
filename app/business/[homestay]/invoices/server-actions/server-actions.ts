@@ -31,6 +31,7 @@ export async function generateInvoice(
     to: new Date(rawFormData.checkoutDate as string),
   };
   rawFormData.checkoutDate = new Date(rawFormData.checkoutDate as string);
+  rawFormData.advanceAmount = +rawFormData.advanceAmount;
   rawFormData.accomodation = JSON.parse(rawFormData.accomodation as string);
   rawFormData.food = JSON.parse(rawFormData.food as string);
   rawFormData.amenities = JSON.parse(rawFormData.amenities as string);

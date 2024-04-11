@@ -29,6 +29,7 @@ export default async function EditPage({
 			id: invoiceData.id,
 			guestName: invoiceData.guestName,
 			invoiceDate: invoiceData.invoiceDate,
+			advanceAmount: invoiceData.advanceAmount || 0,
 			stayDuration: {
 				from: invoiceData.checkinDate,
 				to: invoiceData.checkoutDate,

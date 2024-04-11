@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Invoice, invoiceSchema } from "../shared/shared-code";
-import { DateFieldsType, DatePicker, DateRangePicker } from "./datePicker";
+import { DatePicker, DateRangePicker } from "./datePicker";
 import FormPage from "./formPage";
 import { generateInvoice } from "../server-actions/server-actions";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +28,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 const defaultValues = {
 	guestName: "",
 	invoiceDate: new Date(),
+	advanceAmount: 0,
 	stayDuration: {
 		from: subDays(new Date(), 2),
 		to: new Date(),
@@ -118,6 +119,10 @@ export default function InvoiceForm({
 		if (invoice?.id) {
 			formData.append("id", `${invoice.id}`);
 		}
+		formData.append(
+			"advanceAmount",
+			form.getValues("advanceAmount").toString(),
+		);
 		formData.append("guestName", form.getValues("guestName"));
 		formData.append("invoiceDate", form.getValues("invoiceDate").toString());
 		formData.append(
@@ -242,6 +247,25 @@ export default function InvoiceForm({
 									name={"invoiceDate"}
 									render={({ field }) => (
 										<DatePicker label="Invoice date:" field={field} />
+									)}
+								/>
+							</div>
+							<div className="flex flex-col gap-2">
+								<FormField
+									control={form.control}
+									name="advanceAmount"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Advance Paid(INR):</FormLabel>
+											<FormControl>
+												<Input
+													{...form.register("advanceAmount")}
+													placeholder="Advance paid(INR)"
+													className="bg-background"
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
 									)}
 								/>
 							</div>

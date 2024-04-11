@@ -446,6 +446,7 @@ export const invoice = pgTable("Invoice", {
   checkinDate: timestamp("checkinDate").notNull(),
   checkoutDate: timestamp("checkoutDate").notNull(),
   isDeleted: boolean("isDeleted").notNull().default(false),
+  advanceAmount: integer("advanceAmount").default(0),
   homestayId: text("homestayId")
     .notNull()
     .references(() => homestay.id, {
