@@ -64,9 +64,7 @@ export function DatePicker({
 							setOpen(false);
 							field.onBlur();
 						}}
-						disabled={(date) =>
-							date > new Date() || date < new Date("2023-12-12")
-						}
+						disabled={(date) => date < new Date("2023-12-12")}
 						initialFocus
 					/>
 				</PopoverContent>
@@ -125,9 +123,7 @@ export function DateRangePicker({
 								onSelected(e);
 							}
 						}}
-						disabled={(date) =>
-							date > new Date() || date < new Date("2023-12-12")
-						}
+						disabled={(date) => date < new Date("2023-12-12")}
 						initialFocus
 						footer={
 							<div className="flex items-center justify-end w-full gap-2 py-2">
