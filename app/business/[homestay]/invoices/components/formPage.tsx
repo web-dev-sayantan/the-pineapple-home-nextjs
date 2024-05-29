@@ -46,192 +46,119 @@ export default function FormPage({
 	autoCompleteItems: { name: string; rate: number }[];
 }) {
 	const [showSuggestions, setShowSuggestions] = useState(false);
+
+	const onRemoveItem = (item: FieldArray, index: number) => {
+		items.update(index, { ...items.fields[index], deleted: true });
+	};
 	return (
 		<div className="flex flex-col gap-6">
 			{items.fields.length > 0 ? (
-				items.fields.map((_, index) => (
-					<div
-						className="flex flex-col gap-2"
-						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-						key={index}
-					>
-						<hr className="border-2" />
-						<div className="flex items-center justify-between">
-							<h1 className="text-lg font-semibold">Item {index + 1} : </h1>
-							<Button
-								variant={"outline"}
-								className="bg-destructive hover:bg-destructive/80"
-								title="Delete"
-								onClick={() => items.remove(index)}
-							>
-								<TrashIcon className="text-primary-foreground" />
-							</Button>
-						</div>
-						<hr className="border-2" />
-						<div className="flex flex-col gap-4 p-2">
-							{/* Autocomplete */}
+				items.fields
+					.filter((item) => !item.deleted)
+					.map((_, index) => (
+						<div
+							className="flex flex-col gap-2"
+							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+							key={index}
+						>
+							<hr className="border-2" />
+							<div className="flex items-center justify-between">
+								<h1 className="text-lg font-semibold">Item {index + 1} : </h1>
+								<Button
+									variant={"outline"}
+									className="bg-destructive hover:bg-destructive/80"
+									title="Delete"
+									onClick={() => onRemoveItem(items, index)}
+								>
+									<TrashIcon className="text-primary-foreground" />
+								</Button>
+							</div>
+							<hr className="border-2" />
+							<div className="flex flex-col gap-4 p-2">
+								{/* Autocomplete */}
 
-							<FormField
-								control={form.control}
-								name={`${type}.${index}.name`}
-								render={({ field }) => (
-									<FormItem className="flex flex-col w-full">
-										<FormLabel>Item Name:</FormLabel>
-										{type !== "accomodation" ? (
-											<Popover
-												open={showSuggestions}
-												onOpenChange={setShowSuggestions}
-											>
-												<PopoverTrigger asChild>
-													<Input
-														type="text"
-														{...field}
-														{...form.register(`${type}.${index}.name`, {
-															onChange: (e) => {
-																console.log("Changed Item name");
-																// if (
-																// 	!showSuggestions &&
-																// 	autoCompleteItems.length
-																// ) {
-																// 	setShowSuggestions(true);
-																// }
-															},
-															// onBlur: (e) => {
-															// 	console.log(
-															// 		"Blurred Item name",
-															// 		showSuggestions,
-															// 	);
-															// 	// setShowSuggestions(false);
-															// },
-														})}
-														// onFocus={() => {
-														// 	console.log("Focused Item name");
-														// 	// setShowSuggestions(true);
-														// }}
-													/>
-												</PopoverTrigger>
-												<PopoverContent>
-													{autoCompleteItems
-														.filter((item) =>
-															item.name
-																.toLowerCase()
-																.includes(
-																	form
-																		.getValues(`${type}.${index}.name`)
-																		.toLowerCase(),
-																),
-														)
-														.map((item) => (
-															<div
-																key={item.name}
-																className="w-full p-2 rounded-md cursor-pointer hover:bg-accent hover:text-primary-foreground focus:border-red-100"
-																onClick={() => {
-																	form.setValue(
-																		`${type}.${index}.name`,
-																		item.name,
-																	);
-																	form.setValue(
-																		`${type}.${index}.rate`,
-																		item.rate,
-																	);
-																	setShowSuggestions(false);
-																}}
-																onKeyDown={(e) => {
-																	if (e.key === "Enter") {
-																		form.setValue(
-																			`${type}.${index}.name`,
-																			item.name,
-																		);
-																		form.setValue(
-																			`${type}.${index}.rate`,
-																			item.rate,
-																		);
-																		setShowSuggestions(false);
-																	}
-																}}
-															>
-																{item.name}
-															</div>
-														))}
-												</PopoverContent>
-											</Popover>
-										) : (
+								<FormField
+									control={form.control}
+									name={`${type}.${index}.name`}
+									render={({ field }) => (
+										<FormItem className="flex flex-col w-full">
+											<FormLabel>Item Name:</FormLabel>
 											<Input
 												type="text"
 												{...field}
 												{...form.register(`${type}.${index}.name`)}
 											/>
-										)}
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 
-							<FormField
-								control={form.control}
-								name={`${type}.${index}.rate`}
-								render={({ field }) => (
-									<FormItem className="flex flex-col w-full">
-										<FormLabel>
-											Rate per{" "}
-											{type === "accomodation"
-												? "night"
-												: type === "amenities"
-												  ? "unit"
-												  : "plate"}
-											(INR):
-										</FormLabel>
-										<Input
-											type="number"
-											{...field}
-											{...form.register(`${type}.${index}.rate`)}
-										/>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name={`${type}.${index}.quantity`}
-								render={({ field }) => (
-									<FormItem className="flex flex-col w-full">
-										<FormLabel>
-											{type === "accomodation" ? "No. of Nights" : "Quantity"}:
-										</FormLabel>
-										<div className="flex">
-											<Button
-												type="button"
-												variant={"outline"}
-												className="p-2"
-												onClick={() =>
-													field.value > 1 && field.onChange(field.value - 1)
-												}
-											>
-												<MinusIcon />
-											</Button>
+								<FormField
+									control={form.control}
+									name={`${type}.${index}.rate`}
+									render={({ field }) => (
+										<FormItem className="flex flex-col w-full">
+											<FormLabel>
+												Rate per{" "}
+												{type === "accomodation"
+													? "night"
+													: type === "amenities"
+													  ? "unit"
+													  : "plate"}
+												(INR):
+											</FormLabel>
 											<Input
 												type="number"
 												{...field}
-												{...form.register(`${type}.${index}.quantity`)}
+												{...form.register(`${type}.${index}.rate`)}
 											/>
-											<Button
-												type="button"
-												variant={"outline"}
-												className="p-2"
-												onClick={() =>
-													field.value < 20 && field.onChange(field.value + 1)
-												}
-											>
-												<PlusIcon />
-											</Button>
-										</div>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name={`${type}.${index}.quantity`}
+									render={({ field }) => (
+										<FormItem className="flex flex-col w-full">
+											<FormLabel>
+												{type === "accomodation" ? "No. of Nights" : "Quantity"}
+												:
+											</FormLabel>
+											<div className="flex">
+												<Button
+													type="button"
+													variant={"outline"}
+													className="p-2"
+													onClick={() =>
+														field.value > 1 && field.onChange(field.value - 1)
+													}
+												>
+													<MinusIcon />
+												</Button>
+												<Input
+													type="number"
+													{...field}
+													{...form.register(`${type}.${index}.quantity`)}
+												/>
+												<Button
+													type="button"
+													variant={"outline"}
+													className="p-2"
+													onClick={() =>
+														field.value < 20 && field.onChange(field.value + 1)
+													}
+												>
+													<PlusIcon />
+												</Button>
+											</div>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
 						</div>
-					</div>
-				))
+					))
 			) : (
 				<p className="text-sm text-center text-primary">No item added yet</p>
 			)}

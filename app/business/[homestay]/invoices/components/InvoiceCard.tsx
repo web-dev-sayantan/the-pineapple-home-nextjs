@@ -22,6 +22,7 @@ export type InvoiceCardProps = {
 export default async function InvoiceCard({
 	invoice,
 }: { invoice: InvoiceCardProps }) {
+	console.log(invoice);
 	return (
 		<Card className="flex flex-col justify-between" key={invoice.id}>
 			<CardHeader className="w-full text-center">
@@ -35,6 +36,10 @@ export default async function InvoiceCard({
 				<div className="flex items-center gap-2 text-md">
 					<span className="font-bold">Date: </span>
 					<span className="">{invoice.invoiceDate.toDateString()}</span>
+				</div>
+				<div className="flex items-center gap-2 text-md">
+					<span className="font-bold">Total Amount: </span>
+					<span className="">{invoice.guestName}</span>
 				</div>
 			</CardContent>
 			<CardFooter className="flex flex-col items-center justify-end w-full gap-2">

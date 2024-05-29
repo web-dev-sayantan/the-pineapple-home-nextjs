@@ -10,7 +10,7 @@ import {
   invoiceAmenities,
   invoiceFood,
 } from "@/drizzle/schema";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 export const getAllInvoices = async (homestayId: string) => {
   return await db.query.invoice.findMany({
@@ -18,6 +18,7 @@ export const getAllInvoices = async (homestayId: string) => {
       eq(invoice.homestayId, homestayId),
       eq(invoice.isDeleted, false)
     ),
+    orderBy: [desc(invoice.id)],
   });
 };
 export async function getInvoiceById(invoiceId: number, homestayId: string) {
@@ -41,6 +42,7 @@ export async function getInvoiceById(invoiceId: number, homestayId: string) {
             quantity: true,
             rate: true,
           },
+          where: eq(invoiceFood.deleted, false),
         },
         amenities: {
           columns: {

@@ -5,11 +5,9 @@ import {
   integer,
   uniqueIndex,
   timestamp,
-  foreignKey,
   index,
   numeric,
   boolean,
-  varchar,
   serial,
   pgEnum,
 } from "drizzle-orm/pg-core";
@@ -496,6 +494,7 @@ export const invoiceFood = pgTable(
     name: text("name").notNull(),
     quantity: integer("quantity").notNull(),
     rate: integer("rate").notNull(),
+    deleted: boolean("deleted").default(false),
     invoiceId: integer("invoiceId")
       .notNull()
       .references(() => invoice.id, {
@@ -518,6 +517,7 @@ export const invoiceAmenities = pgTable(
     name: text("name").notNull(),
     quantity: integer("quantity").notNull(),
     rate: integer("rate").notNull(),
+    deleted: boolean("deleted").default(false),
     invoiceId: integer("invoiceId")
       .notNull()
       .references(() => invoice.id, {

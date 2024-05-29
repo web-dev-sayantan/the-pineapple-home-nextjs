@@ -5,6 +5,7 @@ import { getInvoiceById } from "@/data/admin/invoice-dto";
 import { getHomestayById } from "@/data/homestay-dto";
 import { FoodTypesEnum } from "@/drizzle/schema";
 import Link from "next/link";
+import Image from "next/image";
 
 export default async function Invoice({
 	params,
@@ -309,12 +310,19 @@ export default async function Invoice({
 
 						<div className="flex flex-col items-center w-full gap-2 p-2 rounded-md bg-primary/10 md:justify-start md:text-lg">
 							<span className="font-bold text-nowrap">UPI Numbers:</span>
+
+							<span className="md:text-lg text-primary text-wrap">
+								6290853406 (Rama Dey)
+							</span>
 							<span className="md:text-lg text-primary text-wrap">
 								8017523017 (Sudipta)
 							</span>
-							<span className="md:text-lg text-primary text-wrap">
-								6290853406 (Sayantan)
-							</span>
+							{/* <Image
+								src="/app/upi-scanner.jpeg"
+								alt="upi"
+								width={200}
+								height={200}
+							/> */}
 						</div>
 					</div>
 				</div>

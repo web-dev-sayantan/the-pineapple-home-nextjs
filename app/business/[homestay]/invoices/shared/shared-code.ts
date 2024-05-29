@@ -27,6 +27,7 @@ export type Item = {
   name: string;
   quantity: number;
   rate: number;
+  deleted?: boolean;
 };
 
 const itemSchema = z.object({
