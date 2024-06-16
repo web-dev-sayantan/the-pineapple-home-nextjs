@@ -9,7 +9,6 @@ import {
 	getLunchItems,
 	getSnacksItems,
 } from "@/data/admin/invoice-dto";
-import { FoodTypesEnum } from "@/drizzle/schema";
 
 export default async function EditPage({
 	params,
@@ -45,14 +44,10 @@ export default async function EditPage({
 		};
 		if (invoiceData.food?.length) {
 			for (const food of invoiceData.food) {
-				if (food.type === FoodTypesEnum.enumValues[0])
-					invoice.food.breakfast.push(food);
-				if (food.type === FoodTypesEnum.enumValues[1])
-					invoice.food.lunch.push(food);
-				if (food.type === FoodTypesEnum.enumValues[2])
-					invoice.food.dinner.push(food);
-				if (food.type === FoodTypesEnum.enumValues[3])
-					invoice.food.snacks.push(food);
+				if (food.type === "breakfast") invoice.food.breakfast.push(food);
+				if (food.type === "lunch") invoice.food.lunch.push(food);
+				if (food.type === "dinner") invoice.food.dinner.push(food);
+				if (food.type === "snacks") invoice.food.snacks.push(food);
 			}
 		}
 	}

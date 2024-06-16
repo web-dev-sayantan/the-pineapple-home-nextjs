@@ -1,21 +1,27 @@
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
+import { drizzle } from "drizzle-orm/libsql";
+import { createClient, Client } from "@libsql/client";
+
 import * as schema from "./schema";
 
 if (!process.env.RAILWAY_DATABASE_URL) {
   throw new Error("DATABASE_URL is missing");
 }
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
-let client: postgres.Sql<{}>;
+let client: Client;
 
-if (process.env.NODE_ENV === "production") {
-  client = postgres(process.env.RAILWAY_DATABASE_URL);
+if (process.env.NODE_ENV === "production" && process.env.TURSO_DATABASE_URL) {
+  client = createClient({
+    url: process.env.TURSO_DATABASE_URL,
+    authToken: process.env.TURSO_AUTH_TOKEN,
+  });
 } else {
   //@ts-ignore
-  if (!global.client) {
+  if (!global.client && process.env.TURSO_DATABASE_URL) {
     //@ts-ignore
-    global.client = postgres(process.env.RAILWAY_DATABASE_URL);
+    global.client = createClient({
+      url: process.env.TURSO_DATABASE_URL,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    });
   }
   //@ts-ignore
   client = global.client;

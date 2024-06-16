@@ -3,7 +3,6 @@ import PrintButton from "../components/PrintButton";
 import NavBar from "@/app/components/navBar";
 import { getInvoiceById } from "@/data/admin/invoice-dto";
 import { getHomestayById } from "@/data/homestay-dto";
-import { FoodTypesEnum } from "@/drizzle/schema";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -14,18 +13,10 @@ export default async function Invoice({
 		getInvoiceById(+params.invoiceId, params.homestay),
 		getHomestayById(params.homestay),
 	]);
-	const breakfast = data?.food.filter(
-		(item) => item.type === FoodTypesEnum.enumValues[0],
-	);
-	const lunch = data?.food.filter(
-		(item) => item.type === FoodTypesEnum.enumValues[1],
-	);
-	const dinner = data?.food.filter(
-		(item) => item.type === FoodTypesEnum.enumValues[2],
-	);
-	const snacks = data?.food.filter(
-		(item) => item.type === FoodTypesEnum.enumValues[3],
-	);
+	const breakfast = data?.food.filter((item) => item.type === "breakfast");
+	const lunch = data?.food.filter((item) => item.type === "lunch");
+	const dinner = data?.food.filter((item) => item.type === "dinner");
+	const snacks = data?.food.filter((item) => item.type === "snacks");
 	const total = data
 		? data.accomodation.reduce(
 				(acc, item) => acc + item.rate * item.quantity,

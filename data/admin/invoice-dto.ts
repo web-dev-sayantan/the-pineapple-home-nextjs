@@ -4,7 +4,7 @@ import {
 } from "@/app/business/[homestay]/invoices/shared/shared-code";
 import { db } from "@/drizzle";
 import {
-  FoodTypesEnum,
+  FoodType,
   invoice,
   invoiceAccomodation,
   invoiceAmenities,
@@ -89,7 +89,7 @@ export async function createInvoice(invoiceData: Invoice, homestayId: string) {
       return await db
         .insert(invoiceFood)
         .values({
-          type: FoodTypesEnum.enumValues[0],
+          type: "breakfast",
           name: item.name,
           quantity: +item.quantity,
           rate: +item.rate,
@@ -101,7 +101,7 @@ export async function createInvoice(invoiceData: Invoice, homestayId: string) {
       return await db
         .insert(invoiceFood)
         .values({
-          type: FoodTypesEnum.enumValues[1],
+          type: "lunch",
           name: item.name,
           quantity: +item.quantity,
           rate: +item.rate,
@@ -113,7 +113,7 @@ export async function createInvoice(invoiceData: Invoice, homestayId: string) {
       return await db
         .insert(invoiceFood)
         .values({
-          type: FoodTypesEnum.enumValues[2],
+          type: "dinner",
           name: item.name,
           quantity: +item.quantity,
           rate: +item.rate,
@@ -125,7 +125,7 @@ export async function createInvoice(invoiceData: Invoice, homestayId: string) {
       return await db
         .insert(invoiceFood)
         .values({
-          type: FoodTypesEnum.enumValues[3],
+          type: "snacks",
           name: item.name,
           quantity: +item.quantity,
           rate: +item.rate,
@@ -204,10 +204,7 @@ export async function updateInvoice(invoiceData: Invoice) {
     };
   }
 
-  function updateFoodItem(
-    table: typeof invoiceFood,
-    type: (typeof FoodTypesEnum.enumValues)[number]
-  ) {
+  function updateFoodItem(table: typeof invoiceFood, type: FoodType) {
     return async (item: Item) => {
       if (invoiceData.id) {
         if (item.id) {
@@ -244,18 +241,10 @@ export async function updateInvoice(invoiceData: Invoice) {
   await Promise.all([
     ...invoiceData.accomodation.map(updateItem(invoiceAccomodation)),
     ...invoiceData.amenities.map(updateItem(invoiceAmenities)),
-    ...invoiceData.food.breakfast.map(
-      updateFoodItem(invoiceFood, FoodTypesEnum.enumValues[0])
-    ),
-    ...invoiceData.food.lunch.map(
-      updateFoodItem(invoiceFood, FoodTypesEnum.enumValues[1])
-    ),
-    ...invoiceData.food.snacks.map(
-      updateFoodItem(invoiceFood, FoodTypesEnum.enumValues[3])
-    ),
-    ...invoiceData.food.dinner.map(
-      updateFoodItem(invoiceFood, FoodTypesEnum.enumValues[2])
-    ),
+    ...invoiceData.food.breakfast.map(updateFoodItem(invoiceFood, "breakfast")),
+    ...invoiceData.food.lunch.map(updateFoodItem(invoiceFood, "lunch")),
+    ...invoiceData.food.snacks.map(updateFoodItem(invoiceFood, "snacks")),
+    ...invoiceData.food.dinner.map(updateFoodItem(invoiceFood, "dinner")),
   ]);
 
   return updatedInvoice;
@@ -271,47 +260,47 @@ export async function deleteInvoice(invoiceId: number) {
 
 export async function getBreakfastItems() {
   return await db
-    .selectDistinctOn([invoiceFood.name, invoiceFood.rate], {
+    .selectDistinct({
       name: invoiceFood.name,
       rate: invoiceFood.rate,
     })
     .from(invoiceFood)
-    .where(eq(invoiceFood.type, FoodTypesEnum.enumValues[0]));
+    .where(eq(invoiceFood.type, "breakfast"));
 }
 
 export async function getLunchItems() {
   return await db
-    .selectDistinctOn([invoiceFood.name, invoiceFood.rate], {
+    .selectDistinct({
       name: invoiceFood.name,
       rate: invoiceFood.rate,
     })
     .from(invoiceFood)
-    .where(eq(invoiceFood.type, FoodTypesEnum.enumValues[1]));
+    .where(eq(invoiceFood.type, "lunch"));
 }
 
 export async function getSnacksItems() {
   return await db
-    .selectDistinctOn([invoiceFood.name, invoiceFood.rate], {
+    .selectDistinct({
       name: invoiceFood.name,
       rate: invoiceFood.rate,
     })
     .from(invoiceFood)
-    .where(eq(invoiceFood.type, FoodTypesEnum.enumValues[3]));
+    .where(eq(invoiceFood.type, "snacks"));
 }
 
 export async function getDinnerItems() {
   return await db
-    .selectDistinctOn([invoiceFood.name, invoiceFood.rate], {
+    .selectDistinct({
       name: invoiceFood.name,
       rate: invoiceFood.rate,
     })
     .from(invoiceFood)
-    .where(eq(invoiceFood.type, FoodTypesEnum.enumValues[2]));
+    .where(eq(invoiceFood.type, "dinner"));
 }
 
 export function getAmenities() {
   return db
-    .selectDistinctOn([invoiceAmenities.name, invoiceAmenities.rate], {
+    .selectDistinct({
       name: invoiceAmenities.name,
       rate: invoiceAmenities.rate,
     })
