@@ -1,24 +1,21 @@
 import {
-  pgTable,
   text,
-  doublePrecision,
-  integer,
-  uniqueIndex,
-  timestamp,
-  index,
+  sqliteTable,
   numeric,
-  boolean,
-  serial,
-  pgEnum,
-} from "drizzle-orm/pg-core";
+  integer,
+  index,
+  uniqueIndex,
+  real,
+} from "drizzle-orm/sqlite-core";
 
-import { InferSelectModel, relations } from "drizzle-orm";
+import { InferSelectModel, relations, sql } from "drizzle-orm";
+import { boolean } from "drizzle-orm/pg-core";
 
-export const location = pgTable("Location", {
+export const location = sqliteTable("Location", {
   id: text("id").primaryKey().notNull(),
   name: text("name").unique().notNull(),
-  lat: doublePrecision("lat").notNull(),
-  long: doublePrecision("long").notNull(),
+  lat: real("lat").notNull(),
+  long: real("long").notNull(),
   state: text("state").notNull(),
   altitude: integer("altitude").notNull(),
   description: text("description").notNull(),
@@ -29,23 +26,22 @@ export type Location = typeof location.$inferSelect;
 export type NewLocation = typeof location.$inferInsert;
 
 // Admin Table
-export const admin = pgTable(
+export const admin = sqliteTable(
   "Admin",
   {
     id: text("id").primaryKey().notNull(),
     email: text("email").notNull(),
     mobile: text("mobile").notNull(),
-    createdAt: timestamp("createdAt", { precision: 3, mode: "string" })
-      .defaultNow()
+    createdAt: integer("createdAt", { mode: "timestamp" })
+      .default(sql`(CURRENT_TIMESTAMP)`)
       .notNull(),
-    updatedAt: timestamp("updatedAt", {
-      precision: 3,
-      mode: "string",
+    updatedAt: integer("updatedAt", {
+      mode: "timestamp",
     }).notNull(),
     firstname: text("firstname").notNull(),
     lastname: text("lastname").notNull(),
     sex: text("sex"),
-    dob: timestamp("dob", { precision: 3, mode: "string" }).notNull(),
+    dob: integer("dob", { mode: "timestamp" }).notNull(),
     nationality: text("nationality"),
     address: text("address"),
   },
@@ -58,7 +54,7 @@ export const admin = pgTable(
 );
 
 // Admin Password Table
-export const adminPassword = pgTable(
+export const adminPassword = sqliteTable(
   "AdminPassword",
   {
     hash: text("hash").notNull(),
@@ -74,7 +70,7 @@ export const adminPassword = pgTable(
 );
 
 // Homestay Table
-export const homestay = pgTable(
+export const homestay = sqliteTable(
   "Homestay",
   {
     id: text("id").primaryKey().notNull(),
@@ -97,7 +93,7 @@ export const homestay = pgTable(
 );
 
 // Guest Table
-export const guest = pgTable(
+export const guest = sqliteTable(
   "Guest",
   {
     id: text("id").primaryKey().notNull(),
@@ -115,23 +111,22 @@ export const guest = pgTable(
 );
 
 // User Table
-export const user = pgTable(
+export const user = sqliteTable(
   "User",
   {
     id: text("id").primaryKey().notNull(),
     email: text("email").notNull(),
     mobile: text("mobile").notNull(),
-    createdAt: timestamp("createdAt", { precision: 3, mode: "string" })
-      .defaultNow()
+    createdAt: integer("createdAt", { mode: "timestamp" })
+      .default(sql`(CURRENT_TIMESTAMP)`)
       .notNull(),
-    updatedAt: timestamp("updatedAt", {
-      precision: 3,
-      mode: "string",
+    updatedAt: integer("updatedAt", {
+      mode: "timestamp",
     }).notNull(),
     firstname: text("firstname").notNull(),
     lastname: text("lastname").notNull(),
     sex: text("sex").notNull(),
-    dob: timestamp("dob", { precision: 3, mode: "string" }).notNull(),
+    dob: integer("dob", { mode: "timestamp" }).notNull(),
     nationality: text("nationality").notNull(),
     address: text("address"),
   },
@@ -144,22 +139,20 @@ export const user = pgTable(
 );
 
 // Reservation Table
-export const reservation = pgTable(
+export const reservation = sqliteTable(
   "Reservation",
   {
     id: text("id").primaryKey().notNull(),
-    createdAt: timestamp("createdAt", {
-      precision: 3,
-      mode: "string",
+    createdAt: integer("createdAt", {
+      mode: "timestamp",
     }).notNull(),
-    modifiedAt: timestamp("modifiedAt", {
-      precision: 3,
-      mode: "string",
+    modifiedAt: integer("modifiedAt", {
+      mode: "timestamp",
     }).notNull(),
-    dateIn: timestamp("dateIn", { precision: 3, mode: "string" }).notNull(),
-    dateOut: timestamp("dateOut", { precision: 3, mode: "string" }).notNull(),
-    totalAmount: numeric("totalAmount", { precision: 65, scale: 30 }).notNull(),
-    dueAmount: numeric("dueAmount", { precision: 65, scale: 30 }).notNull(),
+    dateIn: integer("dateIn", { mode: "timestamp" }).notNull(),
+    dateOut: integer("dateOut", { mode: "timestamp" }).notNull(),
+    totalAmount: numeric("totalAmount").notNull(),
+    dueAmount: numeric("dueAmount").notNull(),
     userId: text("userId")
       .notNull()
       .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
@@ -179,7 +172,7 @@ export const reservation = pgTable(
 );
 
 // Homestay Amenities Table
-export const homestayAmenities = pgTable(
+export const homestayAmenities = sqliteTable(
   "HomestayAmenities",
   {
     homestayId: text("homestayId")
@@ -211,12 +204,12 @@ export const homestayAmenities = pgTable(
 );
 
 // Room Reserved Table
-export const roomReserved = pgTable(
+export const roomReserved = sqliteTable(
   "RoomReserved",
   {
     id: text("id").primaryKey().notNull(),
     pax: integer("pax").notNull(),
-    amount: numeric("amount", { precision: 65, scale: 30 }).notNull(),
+    amount: numeric("amount").notNull(),
     status: text("status").notNull(),
     guestId: text("guestId")
       .notNull()
@@ -241,13 +234,13 @@ export const roomReserved = pgTable(
 );
 
 // Food Plan Table
-export const foodPlan = pgTable(
+export const foodPlan = sqliteTable(
   "FoodPlan",
   {
     id: text("id").primaryKey().notNull(),
     name: text("name").notNull(),
-    tariff: numeric("tariff", { precision: 65, scale: 30 }).notNull(),
-    nonVeg: boolean("nonVeg"),
+    tariff: numeric("tariff").notNull(),
+    nonVeg: integer("nonVeg", { mode: "boolean" }),
   },
   (table) => {
     return {
@@ -260,18 +253,18 @@ export const foodPlan = pgTable(
 );
 
 // Room Table
-export const room = pgTable(
+export const room = sqliteTable(
   "Room",
   {
     id: text("id").primaryKey().notNull(),
     name: text("name").notNull(),
-    toiletAttached: boolean("toiletAttached").notNull(),
-    airConditioned: boolean("airConditioned").notNull(),
-    kitchenAttached: boolean("kitchenAttached").notNull(),
-    isDorm: boolean("isDorm").notNull(),
+    toiletAttached: integer("toiletAttached", { mode: "boolean" }).notNull(),
+    airConditioned: integer("airConditioned", { mode: "boolean" }).notNull(),
+    kitchenAttached: integer("kitchenAttached", { mode: "boolean" }).notNull(),
+    isDorm: integer("isDorm", { mode: "boolean" }).notNull(),
     description: text("description").notNull(),
     occupancy: integer("occupancy").notNull(),
-    houseRecommendation: boolean("houseRecommendation")
+    houseRecommendation: integer("houseRecommendation", { mode: "boolean" })
       .default(false)
       .notNull(),
     homestayId: text("homestayId")
@@ -289,7 +282,7 @@ export const room = pgTable(
 );
 
 // Room Features Table
-export const roomFeatures = pgTable(
+export const roomFeatures = sqliteTable(
   "RoomFeatures",
   {
     roomId: text("roomId")
@@ -315,13 +308,15 @@ export const roomFeatures = pgTable(
 );
 
 // Homestay Gallery
-export const homestayGallery = pgTable(
+export const homestayGallery = sqliteTable(
   "HomestayGallery",
   {
     url: text("url").primaryKey().notNull(),
     category: text("category").notNull(),
     description: text("description"),
-    isPrimary: boolean("isPrimary").notNull().default(false),
+    isPrimary: integer("isPrimary", { mode: "boolean" })
+      .notNull()
+      .default(false),
     homestayId: text("homestayId")
       .notNull()
       .references(() => homestay.id, {
@@ -339,7 +334,7 @@ export const homestayGallery = pgTable(
 );
 
 // Amenity Table
-export const amenity = pgTable(
+export const amenity = sqliteTable(
   "Amenity",
   {
     id: text("id").primaryKey().notNull(),
@@ -354,7 +349,7 @@ export const amenity = pgTable(
 );
 
 // Feature Table
-export const feature = pgTable(
+export const feature = sqliteTable(
   "Feature",
   {
     id: text("id").primaryKey().notNull(),
@@ -369,13 +364,15 @@ export const feature = pgTable(
 );
 
 // Room Gallery Table
-export const roomGallery = pgTable(
+export const roomGallery = sqliteTable(
   "RoomGallery",
   {
     url: text("url").primaryKey().notNull(),
     category: text("category").notNull(),
     description: text("description"),
-    isPrimary: boolean("isPrimary").notNull().default(false),
+    isPrimary: integer("isPrimary", { mode: "boolean" })
+      .notNull()
+      .default(false),
     roomId: text("roomId")
       .notNull()
       .references(() => room.id, { onDelete: "cascade", onUpdate: "cascade" }),
@@ -388,7 +385,7 @@ export const roomGallery = pgTable(
 );
 
 // Password Table
-export const password = pgTable(
+export const password = sqliteTable(
   "Password",
   {
     hash: text("hash").notNull(),
@@ -404,14 +401,14 @@ export const password = pgTable(
 );
 
 // Rate Table
-export const rate = pgTable(
+export const rate = sqliteTable(
   "Rate",
   {
     id: text("id").primaryKey().notNull(),
     type: text("type").notNull().default("B2B"),
     headCount: integer("headCount").notNull(),
     tariff: integer("tariff").notNull(),
-    refundable: boolean("refundable").notNull(),
+    refundable: integer("refundable", { mode: "boolean" }).notNull(),
     roomId: text("roomId")
       .notNull()
       .references(() => room.id, { onDelete: "cascade", onUpdate: "cascade" }),
@@ -426,7 +423,7 @@ export const rate = pgTable(
 export type RateSelect = InferSelectModel<typeof rate>;
 
 // Category Table
-export const category = pgTable("Category", {
+export const category = sqliteTable("Category", {
   id: text("id").primaryKey().notNull(),
   name: text("name").notNull(),
   description: text("description").notNull(),
@@ -437,13 +434,13 @@ export const category = pgTable("Category", {
 });
 
 // Invoice Table
-export const invoice = pgTable("Invoice", {
-  id: serial("id").primaryKey().notNull(),
+export const invoice = sqliteTable("Invoice", {
+  id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
   guestName: text("guestName").notNull(),
-  invoiceDate: timestamp("invoiceDate").notNull(),
-  checkinDate: timestamp("checkinDate").notNull(),
-  checkoutDate: timestamp("checkoutDate").notNull(),
-  isDeleted: boolean("isDeleted").notNull().default(false),
+  invoiceDate: integer("invoiceDate", { mode: "timestamp" }).notNull(),
+  checkinDate: integer("checkinDate", { mode: "timestamp" }).notNull(),
+  checkoutDate: integer("checkoutDate", { mode: "timestamp" }).notNull(),
+  isDeleted: integer("isDeleted", { mode: "boolean" }).notNull().default(false),
   advanceAmount: integer("advanceAmount").default(0),
   homestayId: text("homestayId")
     .notNull()
@@ -454,10 +451,10 @@ export const invoice = pgTable("Invoice", {
 });
 
 // Invoice Accomodation Table
-export const invoiceAccomodation = pgTable(
+export const invoiceAccomodation = sqliteTable(
   "InvoiceAccomodation",
   {
-    id: serial("id").$type<number>().primaryKey().notNull(),
+    id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
     name: text("name").notNull(),
     quantity: integer("quantity").notNull(),
     rate: integer("rate").notNull(),
@@ -478,23 +475,18 @@ export const invoiceAccomodation = pgTable(
 );
 
 // Food Types Enum
-export const FoodTypesEnum = pgEnum("type", [
-  "breakfast",
-  "lunch",
-  "dinner",
-  "snacks",
-]);
+export type FoodType = "breakfast" | "lunch" | "dinner" | "snacks";
 
 // Invoice Food Table
-export const invoiceFood = pgTable(
+export const invoiceFood = sqliteTable(
   "InvoiceFood",
   {
-    id: serial("id").primaryKey().notNull(),
-    type: FoodTypesEnum("type").notNull(),
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    type: text("type").$type<FoodType>().notNull(),
     name: text("name").notNull(),
     quantity: integer("quantity").notNull(),
     rate: integer("rate").notNull(),
-    deleted: boolean("deleted").default(false),
+    deleted: integer("deleted", { mode: "boolean" }).default(false),
     invoiceId: integer("invoiceId")
       .notNull()
       .references(() => invoice.id, {
@@ -510,14 +502,14 @@ export const invoiceFood = pgTable(
 );
 
 // Invoice Amenities Table
-export const invoiceAmenities = pgTable(
+export const invoiceAmenities = sqliteTable(
   "InvoiceAmenities",
   {
-    id: serial("id").primaryKey().notNull(),
+    id: integer("id").primaryKey({ autoIncrement: true }),
     name: text("name").notNull(),
     quantity: integer("quantity").notNull(),
     rate: integer("rate").notNull(),
-    deleted: boolean("deleted").default(false),
+    deleted: integer("deleted", { mode: "boolean" }).default(false),
     invoiceId: integer("invoiceId")
       .notNull()
       .references(() => invoice.id, {
