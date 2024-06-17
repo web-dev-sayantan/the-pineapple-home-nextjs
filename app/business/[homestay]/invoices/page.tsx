@@ -5,6 +5,7 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import InvoiceCard from "@/app/business/[homestay]/invoices/components/InvoiceCard";
 
+export const maxDuration = 20;
 export default async function Invoices({
 	params,
 }: { params: { homestay: string } }) {
