@@ -168,10 +168,7 @@ export async function updateInvoice(invoiceData: Invoice) {
     .returning();
 
   function updateItem(
-    table:
-      | typeof invoiceAccomodation
-      | typeof invoiceFood
-      | typeof invoiceAmenities
+    table: typeof invoiceAccomodation | typeof invoiceAmenities
   ) {
     return async (item: Item) => {
       if (invoiceData.id) {
@@ -208,6 +205,7 @@ export async function updateInvoice(invoiceData: Invoice) {
     return async (item: Item) => {
       if (invoiceData.id) {
         if (item.id) {
+          console.log("Item: ", item);
           return await db
             .update(table)
             .set({
@@ -216,23 +214,21 @@ export async function updateInvoice(invoiceData: Invoice) {
               name: item.name,
               quantity: +item.quantity,
               rate: +item.rate,
+              deleted: item.deleted,
             })
             .where(
               and(eq(table.invoiceId, invoiceData.id), eq(table.id, item.id))
-            )
-            .returning();
+            );
           // biome-ignore lint/style/noUselessElse: <explanation>
         } else {
-          return await db
-            .insert(table)
-            .values({
-              type,
-              name: item.name,
-              quantity: +item.quantity,
-              rate: +item.rate,
-              invoiceId: +invoiceData.id,
-            })
-            .returning();
+          return await db.insert(table).values({
+            type,
+            name: item.name,
+            quantity: +item.quantity,
+            rate: +item.rate,
+            invoiceId: +invoiceData.id,
+            deleted: item.deleted,
+          });
         }
       }
     };

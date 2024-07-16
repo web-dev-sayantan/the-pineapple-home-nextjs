@@ -9,7 +9,6 @@ import {
 } from "drizzle-orm/sqlite-core";
 
 import { InferSelectModel, relations, sql } from "drizzle-orm";
-import { boolean } from "drizzle-orm/pg-core";
 
 export const location = sqliteTable("Location", {
   id: text("id").primaryKey().notNull(),

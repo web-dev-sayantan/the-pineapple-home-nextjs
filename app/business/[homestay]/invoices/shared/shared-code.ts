@@ -33,7 +33,8 @@ export type Item = {
 const itemSchema = z.object({
   name: z.string().min(1, "Item name is required"),
   quantity: z.coerce.number().min(0, "Quantity cannot be negative"),
-  rate: z.coerce.number().min(1, "Rate cannot be negative"),
+  rate: z.coerce.number().min(1, "Item cannot be free"),
+  deleted: z.boolean().optional(),
 });
 
 export const invoiceSchema = z.object({
