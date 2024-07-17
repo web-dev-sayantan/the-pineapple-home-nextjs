@@ -96,6 +96,14 @@ export async function generateInvoice(
       ? await createInvoice(parsedFormData.data, rawFormData.homestayId)
       : await updateInvoice(parsedFormData.data);
   revalidatePath(`/business/${rawFormData.homestayId}/invoices`);
+  if (result) {
+    revalidatePath(
+      `/business/${rawFormData.homestayId}/invoices/${result[0].id}`
+    );
+    revalidatePath(
+      `/business/${rawFormData.homestayId}/invoices/${result[0].id}/edit`
+    );
+  }
   return {
     fields: {
       id: result ? result[0].id.toString() : "",
