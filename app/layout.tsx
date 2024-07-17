@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Nunito_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
@@ -16,10 +16,10 @@ const ThemeProvider = dynamic(() => import("../components/theme-provider"), {
   ssr: false,
 });
 
-const inter = Nunito_Sans({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "The pineapple home - Manali",
+  title: "The PineApple home - Manali",
   description: "Your second home, in the Himalayas.",
   metadataBase: new URL("https://thepineapplehome.in"),
 };
