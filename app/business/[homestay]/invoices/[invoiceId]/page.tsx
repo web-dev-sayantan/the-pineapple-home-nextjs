@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { format } from "date-fns";
+import { format, toZonedTime } from "date-fns-tz";
+import { OUTPUT_DATE_FORMAT, TZ_IN } from "@/app/constants";
 import { Button } from "@/components/ui/button";
 import PrintButton from "../components/PrintButton";
 import NavBar from "@/app/components/navBar";
@@ -27,6 +28,7 @@ export default async function Invoice({
       data.food.reduce((acc, item) => acc + item.rate * item.quantity, 0) +
       data.amenities.reduce((acc, item) => acc + item.rate * item.quantity, 0)
     : 0;
+  console.log(data?.checkinDate);
   return (
     <div className="w-full">
       <div className="print:hidden">
@@ -48,14 +50,24 @@ export default async function Invoice({
               <h2 className="flex items-center gap-2 text-md">
                 <span className="font-bold min-w-[5rem]">Date:</span>
                 <span className=" text-primary text-nowrap">
-                  {format(data.invoiceDate, "dd/MM/yyyy")}
+                  {format(
+                    toZonedTime(data.invoiceDate, TZ_IN),
+                    OUTPUT_DATE_FORMAT
+                  )}
                 </span>
               </h2>
               <h2 className="flex items-center gap-2 text-md md:hidden">
                 <span className="font-bold min-w-[5rem]">Stay:</span>
                 <span className=" text-primary text-nowrap">
-                  {format(data.checkinDate, "dd/MM/yyyy")} -{" "}
-                  {format(data.checkoutDate, "dd/MM/yyyy")}
+                  {format(
+                    toZonedTime(data.checkinDate, TZ_IN),
+                    OUTPUT_DATE_FORMAT
+                  )}
+                  &nbsp;-&nbsp;
+                  {format(
+                    toZonedTime(data.checkoutDate, TZ_IN),
+                    OUTPUT_DATE_FORMAT
+                  )}
                 </span>
               </h2>
               <h2 className="flex items-center gap-2 text-md md:hidden">
@@ -88,8 +100,15 @@ export default async function Invoice({
             <div className="text-sm font-bold">
               Stay:{" "}
               <span className="text-sm font-normal text-primary">
-                {format(data.checkinDate, "dd/MM/yyyy")} -{" "}
-                {format(data.checkoutDate, "dd/MM/yyyy")}
+                {format(
+                  toZonedTime(data.checkinDate, TZ_IN),
+                  OUTPUT_DATE_FORMAT
+                )}
+                &nbsp;-&nbsp;
+                {format(
+                  toZonedTime(data.checkoutDate, TZ_IN),
+                  OUTPUT_DATE_FORMAT
+                )}
               </span>
             </div>
           </div>
