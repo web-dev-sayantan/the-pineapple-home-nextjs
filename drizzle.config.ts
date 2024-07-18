@@ -15,6 +15,7 @@ export default {
   driver: "turso",
   dbCredentials: {
     url: process.env.TURSO_DATABASE_URL,
+    authToken: process.env.TURSO_AUTH_TOKEN,
   },
   strict: true,
 } satisfies Config;

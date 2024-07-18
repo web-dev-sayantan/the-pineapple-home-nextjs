@@ -3,10 +3,6 @@ import { createClient, Client } from "@libsql/client";
 
 import * as schema from "./schema";
 
-if (!process.env.RAILWAY_DATABASE_URL) {
-  throw new Error("DATABASE_URL is missing");
-}
-
 let client: Client;
 
 if (process.env.NODE_ENV === "production" && process.env.TURSO_DATABASE_URL) {
