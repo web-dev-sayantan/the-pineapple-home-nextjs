@@ -35,16 +35,10 @@ function getHomestayById(id: string) {
       },
       rooms: {
         with: {
-          categories: {
-            columns: {
-              id: true,
-              name: true,
-              description: true,
-            },
-          },
           rates: {
             columns: {
               id: true,
+              type: true,
               tariff: true,
               headCount: true,
             },
