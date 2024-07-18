@@ -80,6 +80,9 @@ importers:
       drizzle-orm:
         specifier: ^0.32.0
         version: 0.32.0(@libsql/client@0.6.2(bufferutil@4.0.8)(utf-8-validate@6.0.3))(@neondatabase/serverless@0.9.3)(@types/pg@8.11.6)(@types/react@18.3.3)(@vercel/postgres@0.8.0)(pg@8.12.0)(postgres@3.4.4)(react@18.2.0)
+      embla-carousel-autoplay:
+        specifier: ^8.1.6
+        version: 8.1.6(embla-carousel@8.1.6)
       embla-carousel-react:
         specifier: ^8.1.6
         version: 8.1.6(react@18.2.0)
@@ -1508,6 +1511,11 @@ packages:
 
   electron-to-chromium@1.4.829:
     resolution: {integrity: sha512-5qp1N2POAfW0u1qGAxXEtz6P7bO1m6gpZr5hdf5ve6lxpLM7MpiM4jIPz7xcrNlClQMafbyUDDWjlIQZ1Mw0Rw==}
+
+  embla-carousel-autoplay@8.1.6:
+    resolution: {integrity: sha512-e5n9f4q+DVeBPiPPT3gwzqpiqfae8aP8fQACS4OZkPFvFLdsVhnWcw+cwtewryP7snWJGKPXEMA1GOjieEKv+w==}
+    peerDependencies:
+      embla-carousel: 8.1.6
 
   embla-carousel-react@8.1.6:
     resolution: {integrity: sha512-DHxwFzF63yVrU95Eo58E9Xr5b6Y9ul6TTsqb/rtwMi+jXudAmIqN1i9iBxQ73i8jKuUVxll/ziNYMmnWvrdQJQ==}
@@ -3641,6 +3649,10 @@ snapshots:
   eastasianwidth@0.2.0: {}
 
   electron-to-chromium@1.4.829: {}
+
+  embla-carousel-autoplay@8.1.6(embla-carousel@8.1.6):
+    dependencies:
+      embla-carousel: 8.1.6
 
   embla-carousel-react@8.1.6(react@18.2.0):
     dependencies:

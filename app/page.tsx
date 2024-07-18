@@ -1,10 +1,8 @@
-import { ModeSwitch } from "@/components/mode-switch";
-import { cn } from "@/lib/utils";
-import { Lilita_One } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-
-const lilita = Lilita_One({ weight: "400", subsets: ["latin"] });
+import { lilita } from "@/app/constants";
+import { ModeSwitch } from "@/components/mode-switch";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   return (
@@ -22,8 +20,8 @@ export default function Home() {
         >
           <h1 className="text-brand-first">THE</h1>
           <h1 className="flex">
-            <h1 className="text-brand-first">PINE</h1>
-            <h1 className="text-brand-second">APPLE</h1>
+            <span className="text-brand-first">PINE</span>
+            <span className="text-brand-second">APPLE</span>
           </h1>
           <h1 className="text-brand-first">HOME</h1>
         </div>
@@ -52,9 +50,12 @@ export default function Home() {
           priority={true}
           className="rounded-lg brightness-[1.2] hidden md:block"
         />
-        {/* CTA Button for Web */}
+        {/* CTA Button */}
         <div className="absolute flex flex-col items-center w-full gap-16 px-8 bottom-8 md:top-1/2 ">
-          <Link href="/places" className="w-full sm:w-80 lg:w-[20rem]">
+          <Link
+            href="/places/manali/the-pineapple-home-manali"
+            className="w-full sm:w-80 lg:w-[20rem]"
+          >
             <button
               type="button"
               className="w-full p-4 text-xl font-semibold tracking-widest text-white bg-gradient-to-br from-brand-second to-accent rounded-xl lg:text-2xl sm:mt-8"
