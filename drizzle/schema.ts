@@ -251,6 +251,13 @@ export const foodPlan = sqliteTable(
   }
 );
 
+// Category Table
+export const category = sqliteTable("Category", {
+  id: text("id").primaryKey().notNull(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+});
+
 // Room Table
 export const room = sqliteTable(
   "Room",
@@ -272,10 +279,23 @@ export const room = sqliteTable(
         onDelete: "restrict",
         onUpdate: "cascade",
       }),
+    categoryId: text("categoryId")
+      .notNull()
+      .references(() => category.id, {
+        onDelete: "restrict",
+        onUpdate: "cascade",
+      }),
+    foodPlanId: text("foodPlanId")
+      .notNull()
+      .references(() => foodPlan.id, {
+        onDelete: "restrict",
+        onUpdate: "cascade",
+      }),
   },
   (table) => {
     return {
       homestayIdIdx: index("Room_homestayId_idx").on(table.homestayId),
+      categoryIdIdx: index("Room_categoryId_idx").on(table.categoryId),
     };
   }
 );
@@ -421,17 +441,6 @@ export const rate = sqliteTable(
 
 export type RateSelect = InferSelectModel<typeof rate>;
 
-// Category Table
-export const category = sqliteTable("Category", {
-  id: text("id").primaryKey().notNull(),
-  name: text("name").notNull(),
-  description: text("description").notNull(),
-  roomId: text("roomId").references(() => room.id, {
-    onDelete: "set null",
-    onUpdate: "cascade",
-  }),
-});
-
 // Invoice Table
 export const invoice = sqliteTable("Invoice", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
@@ -524,10 +533,7 @@ export const invoiceAmenities = sqliteTable(
 );
 
 export const categoryRelations = relations(category, ({ one, many }) => ({
-  rooms: one(room, {
-    fields: [category.roomId],
-    references: [room.id],
-  }),
+  rooms: many(room),
 }));
 
 export const roomRelations = relations(room, ({ one, many }) => ({
@@ -535,7 +541,10 @@ export const roomRelations = relations(room, ({ one, many }) => ({
     fields: [room.homestayId],
     references: [homestay.id],
   }),
-  categories: many(category),
+  category: one(category, {
+    fields: [room.categoryId],
+    references: [category.id],
+  }),
   rates: many(rate),
   roomGallery: many(roomGallery),
 }));
@@ -547,7 +556,7 @@ export const rateRelations = relations(rate, ({ one, many }) => ({
   }),
 }));
 
-export const roomGalleryRelations = relations(roomGallery, ({ one, many }) => ({
+export const roomGalleryRelations = relations(roomGallery, ({ one }) => ({
   room: one(room, {
     fields: [roomGallery.roomId],
     references: [room.id],
