@@ -23,6 +23,10 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
+    --pine: 130, 80%, 35%;
+    --pine-foreground: 222.2 47.4% 11.2%;
+    --apple: 350, 80%, 40%;
+    --apple-foreground: 222.2 47.4% 11.2%;
     --radius: 0.5rem;
   }
 
@@ -39,13 +43,18 @@
     --secondary-foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 340 100% 76%;
+    --accent: 340 100% 75%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9;
+    --pine: 130, 80%, 35%;
+    --pine-foreground: 222.2 47.4% 11.2%;
+    --apple: 350, 80%, 40%;
+    --apple-foreground: 222.2 47.4% 11.2%;
+    --radius: 0.5rem;
   }
   i.material-symbol-outlined {
     font-family: var(--font-family-symbols);
