@@ -14,19 +14,19 @@ export default function Home() {
       <section className="flex flex-col items-end justify-center w-full px-4 py-10 basis-2/5 md:basis-1/4 md:py-4 md:pb-10 ">
         <div
           className={cn(
-            "w-full flex flex-col md:flex-row md:justify-center gap-4 text-6xl text-left font-bold tracking-wide md:tracking-widest delay-1000 font-display text-primary-foreground dark:text-primary lg:text-7xl",
+            "w-full flex flex-col justify-center items-center md:flex-row md:justify-center gap-4 text-6xl text-left font-bold tracking-wide md:tracking-widest delay-1000 font-display text-primary-foreground dark:text-primary lg:text-7xl",
             lilita.className
           )}
         >
-          <h1 className="text-brand-first">THE</h1>
-          <h1 className="flex">
+          <h1 className="text-3xl text-brand-first">THE</h1>
+          <h1 className="flex text-center">
             <span className="text-brand-first">PINE</span>
             <span className="text-brand-second">APPLE</span>
           </h1>
-          <h1 className="text-brand-first">HOME</h1>
+          <h1 className="text-5xl text-brand-first">HOME</h1>
         </div>
-        <div className="hidden w-full pt-2 text-lg leading-relaxed tracking-widest text-center uppercase md:block text-primary lg:text-xl">
-          You now have another home <br className="md:hidden" /> in{" "}
+        <div className="w-full pt-8 text-lg text-center md:leading-relaxed md:uppercase md:tracking-widest md:block text-primary/90 lg:text-xl">
+          Your second home <br className="hidden" /> in{" "}
           <span className="font-bold text-accent">Manali !!</span>
         </div>
       </section>

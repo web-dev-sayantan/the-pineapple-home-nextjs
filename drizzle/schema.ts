@@ -270,6 +270,7 @@ export const room = sqliteTable(
     isDorm: integer("isDorm", { mode: "boolean" }).notNull(),
     description: text("description").notNull(),
     occupancy: integer("occupancy").notNull(),
+    roomCount: integer("roomCount").notNull().default(1),
     houseRecommendation: integer("houseRecommendation", { mode: "boolean" })
       .default(false)
       .notNull(),
