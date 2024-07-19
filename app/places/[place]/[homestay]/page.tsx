@@ -3,7 +3,7 @@ import { getQueryClient } from "@/app/get-query-client";
 import {
   foodPlanOptions,
   homestayOptions,
-} from "@/app/places/[place]/[homestay]/data/homestay";
+} from "@/app/places/[place]/[homestay]/data/homestay-data";
 import HomestayClient from "@/app/places/[place]/[homestay]/components/homestay";
 
 export default async function Homestay({

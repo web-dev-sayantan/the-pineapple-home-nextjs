@@ -3,7 +3,7 @@
 import NavBar from "@/app/components/navBar";
 import BookingButton from "@/app/places/[place]/[homestay]/components/bookingButton";
 import RoomCard from "@/app/places/[place]/[homestay]/components/roomCard";
-import { homestayOptions } from "@/app/places/[place]/[homestay]/data/homestay";
+import { homestayOptions } from "@/app/places/[place]/[homestay]/data/homestay-data";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -23,6 +23,9 @@ export default function HomestayClient({ homestayId }: { homestayId: string }) {
   );
   const mapLink = `http://www.google.com/maps/place/${homestayData?.location.lat},${homestayData?.location.long}`;
 
+  const recommendedRoom = homestayData?.rooms.find(
+    (room) => room.houseRecommendation
+  );
   return (
     <main className="relative flex flex-col items-center justify-center">
       <NavBar>
@@ -42,10 +45,13 @@ export default function HomestayClient({ homestayId }: { homestayId: string }) {
                   >
                     <CarouselContent className="basis-1">
                       {homestayCoverImages.map((image) => (
-                        <CarouselItem key={image.url} className="">
-                          <div className="p-1">
+                        <CarouselItem
+                          key={image.url}
+                          className="p-0 md:basis-1/2 lg:basis-1/3"
+                        >
+                          <div className="p-0">
                             <Card>
-                              <CardContent className="flex items-center justify-center p-6 aspect-square">
+                              <CardContent className="flex items-center justify-center p-0 aspect-video">
                                 <Image
                                   src={image.url}
                                   alt={homestayData.name}
@@ -60,7 +66,7 @@ export default function HomestayClient({ homestayId }: { homestayId: string }) {
                         </CarouselItem>
                       ))}
                     </CarouselContent>
-                    <CarouselPrevious />
+                    <CarouselPrevious variant={"ghost"} />
                     <CarouselNext variant={"ghost"} />
                   </Carousel>
                 </>
@@ -76,10 +82,15 @@ export default function HomestayClient({ homestayId }: { homestayId: string }) {
                 </i>
               </a>
             </h1>
-            <div className="rooms">
-              {homestayData.rooms.map((room) => (
-                <RoomCard room={room} key={room.id} />
-              ))}
+            <div className="grid grid-flow-row-dense gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:px-4 md:items-start md:justify-start md:flex-row md:flex-wrap">
+              {recommendedRoom && (
+                <RoomCard room={recommendedRoom} key={recommendedRoom.id} />
+              )}
+              {homestayData.rooms
+                .filter((room) => !room.houseRecommendation)
+                .map((room) => (
+                  <RoomCard room={room} key={room.id} />
+                ))}
             </div>
           </div>
           <BookingButton />

@@ -33,7 +33,7 @@ export default function RoomRates({
   }
 
   return (
-    <div className="flex flex-col h-full gap-4">
+    <div className="flex flex-col items-center h-full gap-4">
       {rates.map((rate) => (
         <RateCard
           key={rate.id}
