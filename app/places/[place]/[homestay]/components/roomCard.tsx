@@ -56,7 +56,7 @@ export default function RoomCard({ room }: { room: Room }) {
           {getCheapestRate(room.rates)?.tariff || 1400}/-
         </span>
       </div>
-      <RoomRates rates={room.rates} />
+      <RoomRates rates={room.rates} homestayId={room.homestayId} />
       {/* <div className="flex flex-col items-center justify-center">
         <Link
           href={{
