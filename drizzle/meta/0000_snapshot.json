@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "0c75dcbe-beac-440d-b1ff-e2639fd5efb2",
+  "id": "40953b31-0851-4c76-b6e5-275eb2d547e0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "Admin": {
@@ -189,6 +189,74 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "Availability": {
+      "name": "Availability",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "stayDate": {
+          "name": "stayDate",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "avlCount": {
+          "name": "avlCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 1
+        },
+        "roomId": {
+          "name": "roomId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "Availability_stayDate_roomId_key": {
+          "name": "Availability_stayDate_roomId_key",
+          "columns": [
+            "stayDate",
+            "roomId"
+          ],
+          "isUnique": true
+        },
+        "Availability_roomId_idx": {
+          "name": "Availability_roomId_idx",
+          "columns": [
+            "roomId"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "Availability_roomId_Room_id_fk": {
+          "name": "Availability_roomId_Room_id_fk",
+          "tableFrom": "Availability",
+          "tableTo": "Room",
+          "columnsFrom": [
+            "roomId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "Category": {
       "name": "Category",
       "columns": {
@@ -212,31 +280,10 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        },
-        "roomId": {
-          "name": "roomId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "Category_roomId_Room_id_fk": {
-          "name": "Category_roomId_Room_id_fk",
-          "tableFrom": "Category",
-          "tableTo": "Room",
-          "columnsFrom": [
-            "roomId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "cascade"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -308,6 +355,13 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "homestayId": {
+          "name": "homestayId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -318,9 +372,30 @@
             "nonVeg"
           ],
           "isUnique": true
+        },
+        "HomestayAmenities_homestayId_idx": {
+          "name": "HomestayAmenities_homestayId_idx",
+          "columns": [
+            "homestayId"
+          ],
+          "isUnique": false
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "FoodPlan_homestayId_Homestay_id_fk": {
+          "name": "FoodPlan_homestayId_Homestay_id_fk",
+          "tableFrom": "FoodPlan",
+          "tableTo": "Homestay",
+          "columnsFrom": [
+            "homestayId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -1039,7 +1114,8 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": true
         },
         "roomId": {
           "name": "roomId",
@@ -1249,6 +1325,14 @@
           "notNull": true,
           "autoincrement": false
         },
+        "roomCount": {
+          "name": "roomCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 1
+        },
         "houseRecommendation": {
           "name": "houseRecommendation",
           "type": "integer",
@@ -1263,6 +1347,13 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "categoryId": {
+          "name": "categoryId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -1270,6 +1361,13 @@
           "name": "Room_homestayId_idx",
           "columns": [
             "homestayId"
+          ],
+          "isUnique": false
+        },
+        "Room_categoryId_idx": {
+          "name": "Room_categoryId_idx",
+          "columns": [
+            "categoryId"
           ],
           "isUnique": false
         }
@@ -1281,6 +1379,19 @@
           "tableTo": "Homestay",
           "columnsFrom": [
             "homestayId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "cascade"
+        },
+        "Room_categoryId_Category_id_fk": {
+          "name": "Room_categoryId_Category_id_fk",
+          "tableFrom": "Room",
+          "tableTo": "Category",
+          "columnsFrom": [
+            "categoryId"
           ],
           "columnsTo": [
             "id"
@@ -1470,8 +1581,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "roomId": {
-          "name": "roomId",
+        "rateId": {
+          "name": "rateId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reservationId": {
+          "name": "reservationId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -1496,7 +1614,7 @@
         "RoomReserved_roomId_idx": {
           "name": "RoomReserved_roomId_idx",
           "columns": [
-            "roomId"
+            "rateId"
           ],
           "isUnique": false
         },
@@ -1504,6 +1622,13 @@
           "name": "RoomReserved_foodPlanId_idx",
           "columns": [
             "foodPlanId"
+          ],
+          "isUnique": false
+        },
+        "RoomReserved_reservationId_idx": {
+          "name": "RoomReserved_reservationId_idx",
+          "columns": [
+            "reservationId"
           ],
           "isUnique": false
         }
@@ -1522,12 +1647,25 @@
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
-        "RoomReserved_roomId_Room_id_fk": {
-          "name": "RoomReserved_roomId_Room_id_fk",
+        "RoomReserved_rateId_Rate_id_fk": {
+          "name": "RoomReserved_rateId_Rate_id_fk",
           "tableFrom": "RoomReserved",
-          "tableTo": "Room",
+          "tableTo": "Rate",
           "columnsFrom": [
-            "roomId"
+            "rateId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "RoomReserved_reservationId_Reservation_id_fk": {
+          "name": "RoomReserved_reservationId_Reservation_id_fk",
+          "tableFrom": "RoomReserved",
+          "tableTo": "Reservation",
+          "columnsFrom": [
+            "reservationId"
           ],
           "columnsTo": [
             "id"
