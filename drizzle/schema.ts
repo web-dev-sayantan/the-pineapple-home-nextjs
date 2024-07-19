@@ -245,18 +245,12 @@ export const foodPlan = sqliteTable(
   {
     id: text("id").primaryKey().notNull(),
     name: text("name").notNull(),
-    title: text("name"),
-    tariff: numeric("tariff").notNull(),
+    title: text("title"),
+    tariff: integer("tariff").notNull(),
     nonVeg: integer("nonVeg", { mode: "boolean" }),
     homestayId: text("homestayId")
       .notNull()
       .references(() => homestay.id, {
-        onDelete: "cascade",
-        onUpdate: "cascade",
-      }),
-    roomId: text("roomId")
-      .notNull()
-      .references(() => room.id, {
         onDelete: "cascade",
         onUpdate: "cascade",
       }),

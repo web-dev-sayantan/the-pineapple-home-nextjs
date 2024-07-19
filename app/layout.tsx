@@ -4,8 +4,7 @@ import localFont from "next/font/local";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/next-auth";
-
-import AuthSessionProvider from "@/context/sessionProvider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { CSPostHogProvider } from "./providers";
 import { cn } from "../lib/utils";
 import dynamic from "next/dynamic";
@@ -44,24 +43,24 @@ export default async function RootLayout({
   return (
     <>
       <html lang="en" className={cn("h-full", materialSymbols.variable)}>
-        <CSPostHogProvider>
-          <AuthSessionProvider session={session}>
-            <body
-              className={cn(
-                "relative h-full antialiased font-sans",
-                inter.className
-              )}
+        <head />
+        <CSPostHogProvider session={session}>
+          <body
+            className={cn(
+              "relative h-full antialiased font-sans",
+              inter.className
+            )}
+          >
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              enableColorScheme
             >
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                enableColorScheme
-              >
-                {children}
-              </ThemeProvider>
-            </body>
-          </AuthSessionProvider>
+              {children}
+            </ThemeProvider>
+            <ReactQueryDevtools />
+          </body>
         </CSPostHogProvider>
       </html>
     </>
