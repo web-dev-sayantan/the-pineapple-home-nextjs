@@ -19,7 +19,7 @@ type Room = {
 export default function RoomCard({ room }: { room: Room }) {
   function getCheapestRate(rates: Partial<RateSelect>[]) {
     return rates
-      .toSorted((a, b) => (a.tariff && b.tariff ? a.tariff - b.tariff : 0))
+      .sort((a, b) => (a.tariff && b.tariff ? a.tariff - b.tariff : 0))
       .at(0);
   }
 
