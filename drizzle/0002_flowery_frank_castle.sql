@@ -1,1 +1,0 @@
-ALTER TABLE `Room` ADD `roomCount` integer DEFAULT 1 NOT NULL;

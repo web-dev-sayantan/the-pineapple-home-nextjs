@@ -213,9 +213,15 @@ export const roomReserved = sqliteTable(
     guestId: text("guestId")
       .notNull()
       .references(() => guest.id, { onDelete: "cascade", onUpdate: "cascade" }),
-    roomId: text("roomId")
+    rateId: text("rateId")
       .notNull()
-      .references(() => room.id, { onDelete: "cascade", onUpdate: "cascade" }),
+      .references(() => rate.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    reservationId: text("reservationId")
+      .notNull()
+      .references(() => reservation.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
     foodPlanId: text("foodPlanId")
       .notNull()
       .references(() => foodPlan.id, {
@@ -223,13 +229,14 @@ export const roomReserved = sqliteTable(
         onUpdate: "cascade",
       }),
   },
-  (table) => {
-    return {
-      guestIdIdx: index("RoomReserved_guestId_idx").on(table.guestId),
-      roomIdIdx: index("RoomReserved_roomId_idx").on(table.roomId),
-      foodPlanIdIdx: index("RoomReserved_foodPlanId_idx").on(table.foodPlanId),
-    };
-  }
+  (table) => ({
+    guestIdIdx: index("RoomReserved_guestId_idx").on(table.guestId),
+    rateIdIdx: index("RoomReserved_roomId_idx").on(table.rateId),
+    foodPlanIdIdx: index("RoomReserved_foodPlanId_idx").on(table.foodPlanId),
+    reservationIdIdx: index("RoomReserved_reservationId_idx").on(
+      table.reservationId
+    ),
+  })
 );
 
 // Food Plan Table
@@ -238,14 +245,30 @@ export const foodPlan = sqliteTable(
   {
     id: text("id").primaryKey().notNull(),
     name: text("name").notNull(),
+    title: text("name"),
     tariff: numeric("tariff").notNull(),
     nonVeg: integer("nonVeg", { mode: "boolean" }),
+    homestayId: text("homestayId")
+      .notNull()
+      .references(() => homestay.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    roomId: text("roomId")
+      .notNull()
+      .references(() => room.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
   },
   (table) => {
     return {
       nameNonVegKey: uniqueIndex("FoodPlan_name_nonVeg_key").on(
         table.name,
         table.nonVeg
+      ),
+      homestayIdIdx: index("HomestayAmenities_homestayId_idx").on(
+        table.homestayId
       ),
     };
   }
@@ -283,12 +306,6 @@ export const room = sqliteTable(
     categoryId: text("categoryId")
       .notNull()
       .references(() => category.id, {
-        onDelete: "restrict",
-        onUpdate: "cascade",
-      }),
-    foodPlanId: text("foodPlanId")
-      .notNull()
-      .references(() => foodPlan.id, {
         onDelete: "restrict",
         onUpdate: "cascade",
       }),
@@ -428,20 +445,38 @@ export const rate = sqliteTable(
     type: text("type").notNull().default("B2B"),
     headCount: integer("headCount").notNull(),
     tariff: integer("tariff").notNull(),
-    refundable: integer("refundable", { mode: "boolean" }).notNull(),
+    refundable: integer("refundable", { mode: "boolean" })
+      .notNull()
+      .default(true),
     roomId: text("roomId")
       .notNull()
       .references(() => room.id, { onDelete: "cascade", onUpdate: "cascade" }),
   },
-  (table) => {
-    return {
-      roomIdIdx: index("Rate_roomId_idx").on(table.roomId),
-    };
-  }
+  (table) => ({
+    roomIdIdx: index("Rate_roomId_idx").on(table.roomId),
+  })
 );
 
 export type RateSelect = InferSelectModel<typeof rate>;
 
+export const availability = sqliteTable(
+  "Availability",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
+    stayDate: integer("stayDate", { mode: "timestamp" }).notNull(),
+    avlCount: integer("avlCount").notNull().default(1),
+    roomId: text("roomId")
+      .notNull()
+      .references(() => room.id, { onDelete: "cascade", onUpdate: "cascade" }),
+  },
+  (table) => ({
+    stayDateRoomKey: uniqueIndex("Availability_stayDate_roomId_key").on(
+      table.stayDate,
+      table.roomId
+    ),
+    roomIdIdx: index("Availability_roomId_idx").on(table.roomId),
+  })
+);
 // Invoice Table
 export const invoice = sqliteTable("Invoice", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),

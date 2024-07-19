@@ -31,7 +31,9 @@ export default function RateCard({
                 : "text-primary"
             )}
           >
-            {rate.type ? mealPlans[rate.type] : "Accomodation Only"}
+            {rate.type && mealPlans[rate.type]
+              ? mealPlans[rate.type]
+              : "Accomodation Only"}
           </span>
           <span
             className={cn(
