@@ -1,5 +1,15 @@
-import { RateSelect } from "@/drizzle/schema";
+import { RateSelect, RoomGallerySelect } from "@/drizzle/schema";
 import RoomRates from "./roomRates";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 type Room = {
   id: string;
@@ -13,7 +23,9 @@ type Room = {
   occupancy: number;
   houseRecommendation: boolean;
   categoryId: string;
+  roomCount: number;
   rates: Partial<RateSelect>[];
+  roomGallery: Partial<RoomGallerySelect>[];
 };
 
 export default function RoomCard({ room }: { room: Room }) {
@@ -24,8 +36,13 @@ export default function RoomCard({ room }: { room: Room }) {
   }
 
   return (
-    <div className="flex flex-col gap-4 p-4 m-4 rounded-lg bg-secondary">
-      <div className="flex flex-col flex-grow-1">
+    <div
+      className={cn(
+        "flex flex-col gap-4 md:rounded-lg bg-secondary",
+        `row-span-${room.rates.length}`
+      )}
+    >
+      <div className="flex flex-col p-4 flex-grow-1">
         {room.houseRecommendation ? (
           <div className="w-32 px-4 py-1 mb-2 text-xs text-center text-teal-100 bg-teal-700 rounded-2xl">
             Recommended
@@ -50,13 +67,40 @@ export default function RoomCard({ room }: { room: Room }) {
           </span>
         </h2>
       </div>
-      <div className="w-full p-2 text-center">
-        <span className="text-lg font-normal">Starting from Rs. </span>{" "}
-        <span className="text-xl font-extrabold text-accent">
-          {getCheapestRate(room.rates)?.tariff || 1400}/-
-        </span>
+      {/* Carousel */}
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full"
+      >
+        <CarouselContent className="basis-1">
+          {room.roomGallery.map((image) => (
+            <CarouselItem key={image.url} className="">
+              <div className="px-4">
+                <Card>
+                  <CardContent className="flex items-center justify-center p-0 aspect-video">
+                    <Image
+                      src={image.url || ""}
+                      alt={image.description || "Room Gallery Image"}
+                      width={800}
+                      height={200}
+                      priority
+                      className="w-full h-full rounded-lg"
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious variant={"ghost"} />
+        <CarouselNext variant={"ghost"} />
+      </Carousel>
+      {/* Rates */}
+      <div className="p-4">
+        <RoomRates rates={room.rates} homestayId={room.homestayId} />
       </div>
-      <RoomRates rates={room.rates} homestayId={room.homestayId} />
       {/* <div className="flex flex-col items-center justify-center">
         <Link
           href={{

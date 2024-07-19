@@ -44,6 +44,14 @@ function getHomestayById(id: string) {
               refundable: true,
             },
           },
+          roomGallery: {
+            columns: {
+              url: true,
+              category: true,
+              description: true,
+              isPrimary: true,
+            },
+          },
         },
       },
       homestayGallery: {

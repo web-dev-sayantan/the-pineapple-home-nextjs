@@ -415,6 +415,8 @@ export const roomGallery = sqliteTable(
   }
 );
 
+export type RoomGallerySelect = InferSelectModel<typeof roomGallery>;
+
 // Password Table
 export const password = sqliteTable(
   "Password",
