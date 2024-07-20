@@ -10,11 +10,13 @@ import { useState } from "react";
 export default function RateCard({
   rate,
   homestayId,
+  pax,
   onRateSelected,
   isRateSelected,
 }: {
   rate: Partial<RateSelect>;
   homestayId: string;
+  pax: number;
   onRateSelected: (rate: Partial<RateSelect> | null | undefined) => void;
   isRateSelected: (rate: Partial<RateSelect>) => boolean;
 }) {
