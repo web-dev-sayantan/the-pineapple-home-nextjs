@@ -3,14 +3,16 @@
 import { useState } from "react";
 import RateCard from "./rateCard";
 import { useStore } from "../../../../../store";
-import { RateSelect } from "../../../../../drizzle/schema";
+import { RateSelect } from "@/drizzle/schema";
 
 export default function RoomRates({
   rates,
   homestayId,
+  pax,
 }: {
   rates: Partial<RateSelect>[];
   homestayId: string;
+  pax: number;
 }) {
   const { addSelectedRoomRates, removeSelectedRoomRates, selectedRoomRates } =
     useStore();
@@ -31,17 +33,21 @@ export default function RoomRates({
   function isRateSelected(rate: Partial<RateSelect>) {
     return rate.id === selectedRate?.id;
   }
-
   return (
-    <div className="flex flex-col items-center h-full gap-4">
+    <div className="flex flex-col items-center w-full gap-2">
       {rates.map((rate) => (
-        <RateCard
-          key={rate.id}
-          rate={rate}
-          homestayId={homestayId}
-          isRateSelected={isRateSelected}
-          onRateSelected={onRateSelected}
-        />
+        <>
+          {rate.headCount === pax && (
+            <RateCard
+              key={rate.id}
+              rate={rate}
+              homestayId={homestayId}
+              pax={pax}
+              isRateSelected={isRateSelected}
+              onRateSelected={onRateSelected}
+            />
+          )}
+        </>
       ))}
     </div>
   );

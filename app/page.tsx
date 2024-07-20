@@ -58,9 +58,16 @@ export default function Home() {
           >
             <button
               type="button"
-              className="w-full p-4 text-xl font-semibold tracking-widest text-white bg-gradient-to-br from-brand-second to-accent rounded-xl lg:text-2xl sm:mt-8"
+              className="w-full p-4 bg-gradient-to-br from-brand-second to-accent rounded-xl lg:text-2xl sm:mt-8"
             >
-              LET&apos;S GO!
+              <span
+                className={cn(
+                  "text-2xl tracking-widest text-white ",
+                  lilita.className
+                )}
+              >
+                LET&apos;S GO!
+              </span>
             </button>
           </Link>
         </div>
