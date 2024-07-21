@@ -10,6 +10,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import RatesTabContainer from "./ratesTabContainer";
+import RoomCarousel from "./roomCarousel";
 
 type Room = {
   id: string;
@@ -32,13 +33,15 @@ export default function RoomCard({ room }: { room: Room }) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 md:rounded-lg bg-secondary",
+        "flex flex-col py-4 gap-4 md:rounded-lg bg-secondary",
         `row-span-${room.rates.length}`
       )}
     >
-      <div className="flex flex-col p-4 flex-grow-1">
+      <div className="flex flex-col px-4 flex-grow-1">
         <div className="flex items-center justify-between gap-2">
-          <h1 className="text-lg font-semibold text-primary">{room.name}</h1>
+          <h1 className="text-lg font-semibold capitalize text-primary">
+            {room.name}
+          </h1>
           <div className="flex items-center gap-2">
             <button type="button">
               <i className="material-symbol-outlined text-primary">
@@ -59,37 +62,9 @@ export default function RoomCard({ room }: { room: Room }) {
         </h2>
       </div>
       {/* Carousel */}
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full"
-      >
-        <CarouselContent className="basis-1">
-          {room.roomGallery.map((image) => (
-            <CarouselItem key={image.url} className="">
-              <div className="px-4">
-                <Card>
-                  <CardContent className="flex items-center justify-center p-0 aspect-video">
-                    <Image
-                      src={image.url || ""}
-                      alt={image.description || "Room Gallery Image"}
-                      width={800}
-                      height={200}
-                      priority
-                      className="w-full h-full rounded-lg"
-                    />
-                  </CardContent>
-                </Card>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious variant={"ghost"} />
-        <CarouselNext variant={"ghost"} />
-      </Carousel>
+      <RoomCarousel images={room.roomGallery} />
       {/* Rates */}
-      <div className="p-4">
+      <div className="px-4">
         <RatesTabContainer rates={room.rates} homestayId={room.homestayId} />
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import RateCard from "./rateCard";
 import { useStore } from "../../../../../store";
 import { RateSelect } from "@/drizzle/schema";
@@ -36,18 +36,17 @@ export default function RoomRates({
   return (
     <div className="flex flex-col items-center w-full gap-2">
       {rates.map((rate) => (
-        <>
+        <Fragment key={rate.id}>
           {rate.headCount === pax && (
             <RateCard
               key={rate.id}
               rate={rate}
               homestayId={homestayId}
-              pax={pax}
               isRateSelected={isRateSelected}
               onRateSelected={onRateSelected}
             />
           )}
-        </>
+        </Fragment>
       ))}
     </div>
   );
