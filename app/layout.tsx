@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/utils/next-auth";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { CSPostHogProvider } from "./providers";
 import { cn } from "../lib/utils";
 import dynamic from "next/dynamic";
@@ -59,7 +58,6 @@ export default async function RootLayout({
             >
               {children}
             </ThemeProvider>
-            <ReactQueryDevtools />
           </body>
         </CSPostHogProvider>
       </html>

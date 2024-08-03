@@ -19,6 +19,9 @@ export function DatePickerWithRange({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
   const { dateRange, setDateRange } = useStore((state) => state);
+  const [currentDateRange, setCurrentDateRange] = React.useState({
+    ...dateRange,
+  });
   const disabledDays: Matcher[] = [
     {
       before: new Date(),
@@ -27,7 +30,7 @@ export function DatePickerWithRange({
   ];
   function onDateRangeSelect(selectedDateRange: DateRange | undefined) {
     if (selectedDateRange) {
-      setDateRange(selectedDateRange);
+      setCurrentDateRange(selectedDateRange);
     }
   }
   return (
@@ -61,8 +64,8 @@ export function DatePickerWithRange({
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={dateRange?.from}
-            selected={dateRange}
+            defaultMonth={currentDateRange?.from}
+            selected={currentDateRange}
             onSelect={onDateRangeSelect}
             numberOfMonths={1}
             min={2}
@@ -72,6 +75,13 @@ export function DatePickerWithRange({
           />
         </PopoverContent>
       </Popover>
+      <Button
+        className="w-full"
+        variant={"outline"}
+        onClick={() => setDateRange(currentDateRange)}
+      >
+        Search
+      </Button>
     </div>
   );
 }

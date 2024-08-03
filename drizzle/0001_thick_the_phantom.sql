@@ -8,4 +8,4 @@
 */--> statement-breakpoint
 ALTER TABLE `FoodPlan` ADD `title` text;--> statement-breakpoint
 ALTER TABLE `Rate` ADD `name` text;--> statement-breakpoint
-ALTER TABLE `Rate` ADD `description` text;
+ALTER TABLE `Rate` ADD `rateId` text;

@@ -15,6 +15,34 @@
       "when": 1721542497560,
       "tag": "0001_thick_the_phantom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1722286630477,
+      "tag": "0002_glamorous_king_bedlam",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1722287868500,
+      "tag": "0003_familiar_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1722346723980,
+      "tag": "0004_flashy_xavin",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1722347894503,
+      "tag": "0005_yellow_psynapse",
+      "breakpoints": true
     }
   ]
 }
