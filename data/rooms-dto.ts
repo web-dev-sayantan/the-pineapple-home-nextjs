@@ -107,12 +107,14 @@ export async function getAvailableRatesByDate(
 
 export async function getAvailableRoomsByDate(
 	homestayId: string,
-	toDate?: Date,
-	fromDate?: Date,
+	{ toDate, fromDate }: { toDate: Date; fromDate: Date } = {
+		fromDate: addDays(new Date(), 3),
+		toDate: addDays(new Date(), 5),
+	},
 ) {
 	const availableRates = await getAvailableRatesByDate(homestayId, {
-		from: toZonedTime(startOfDay(addDays(new Date(), 3)), TZ_IN),
-		to: toZonedTime(startOfDay(addDays(new Date(), 5)), TZ_IN),
+		from: toZonedTime(startOfDay(fromDate), TZ_IN),
+		to: toZonedTime(startOfDay(toDate), TZ_IN),
 	});
 	const rooms: {
 		[key: string]: AvailableRoomRate;
