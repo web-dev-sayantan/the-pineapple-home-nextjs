@@ -1,7 +1,4 @@
-import { addDays, startOfDay } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
 import NavBar from "@/app/components/navBar";
-import { TZ_IN } from "@/app/constants";
 import BookingButton from "@/app/places/[place]/[homestay]/components/bookingButton";
 import RoomCard from "@/app/places/[place]/[homestay]/components/roomCard";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,9 +11,8 @@ import {
 } from "@/components/ui/carousel";
 import { DatePickerWithRange } from "@/components/ui/dateRangePicker";
 import { getHomestayWithRoomDataById } from "@/data/homestay-dto";
-import { getAvailableRatesByDate } from "@/data/rooms-dto";
+import { getAvailableRoomsByDate } from "@/data/rooms-dto";
 import Image from "next/image";
-import { AvailableRoomRate } from "@/types/available-room-rates";
 
 export default async function Homestay({
 	params,
@@ -24,69 +20,13 @@ export default async function Homestay({
 	params: { place: string; homestay: string };
 }) {
 	const homestayData = await getHomestayWithRoomDataById(params.homestay);
-	const availableRates = await getAvailableRatesByDate(params.homestay, {
-		from: toZonedTime(startOfDay(addDays(new Date(), 3)), TZ_IN),
-		to: toZonedTime(startOfDay(addDays(new Date(), 5)), TZ_IN),
-	});
-	const rooms: {
-		[key: string]: AvailableRoomRate;
-	} = {};
-	for (const rate of availableRates) {
-		if (!rooms[rate.rateData.roomId]) {
-			rooms[rate.rateData.roomId] = {
-				roomId: rate.rateData.roomId,
-				name: rate.rateData.room.name,
-				description: rate.rateData.room.description,
-				isDorm: rate.rateData.room.isDorm,
-				houseRecommendation: rate.rateData.room.houseRecommendation,
-				categoryId: rate.rateData.room.categoryId,
-				roomGallery: rate.rateData.room.roomGallery,
-				rates: [
-					{
-						rateId: rate.rateId,
-						rate: rate.rate,
-						headCount: rate.rateData.headCount,
-						refundable: rate.rateData.refundable,
-						name: rate.rateData.name,
-					},
-				],
-				avlCount: rate.avlCount,
-				stayDate: rate.stayDate,
-			};
-		} else {
-			if (
-				!rooms[rate.rateData.roomId].rates.find((r) => r.rateId === rate.rateId)
-			) {
-				rooms[rate.rateData.roomId].rates.push({
-					rateId: rate.rateId,
-					name: rate.rateData.name,
-					refundable: rate.rateData.refundable,
-					rate: rate.rate,
-					headCount: rate.rateData.headCount,
-				});
-			} else {
-				// update rate since multiple rates with same id is found
-				rooms[rate.rateData.roomId].rates = rooms[
-					rate.rateData.roomId
-				].rates.map((r) => ({
-					...r,
-					rate: r.rate + (r.rateId === rate.rateId ? rate.rate : 0),
-				}));
-			}
-			rooms[rate.rateData.roomId].avlCount =
-				rooms[rate.rateData.roomId].avlCount < rate.avlCount
-					? rooms[rate.rateData.roomId].avlCount
-					: rate.avlCount;
-		}
-	}
+	const rooms = await getAvailableRoomsByDate(params.homestay);
 	const homestayCoverImages = homestayData?.homestayGallery.filter(
 		(image: { category: string }) => image.category === "cover",
 	);
 
 	const mapLink = `http://www.google.com/maps/place/${homestayData?.location.lat},${homestayData?.location.long}`;
-	const recommendedRoom = Object.values(rooms).find(
-		(room) => room.houseRecommendation,
-	);
+	const recommendedRoom = rooms.find((room) => room.houseRecommendation);
 
 	return (
 		<main className="relative flex flex-col items-center justify-center">
@@ -156,7 +96,7 @@ export default async function Homestay({
 									homestayId={params.homestay}
 								/>
 							)}
-							{Object.values(rooms)
+							{rooms
 								.filter((room) => !room.houseRecommendation)
 								.map((room) => (
 									<RoomCard

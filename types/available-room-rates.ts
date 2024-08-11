@@ -24,4 +24,6 @@ export type AvailableRate = {
 	headCount: number;
 };
 
-type AvailableRoomRatesByDate = ReturnType<typeof getAvailableRatesByDate>;
+export type AvailableRoomRatesByDate = ReturnType<
+	typeof getAvailableRatesByDate
+>;
